@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="App_Config/Include/Sitecore.SharedModules.ImageCropping.config">
+      <publishTime>10/14/2013 11:43:40</publishTime>
+    </File>
+    <File Include="bin/ComponentArt.Web.UI.dll">
+      <publishTime>04/24/2013 12:12:10</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>10/07/2013 14:38:53</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.dll">
+      <publishTime>04/24/2013 12:24:10</publishTime>
+    </File>
+    <File Include="bin/ITHit.WebDAV.Server.dll">
+      <publishTime>04/24/2013 12:24:14</publishTime>
+    </File>
+    <File Include="bin/Lucene.Net.dll">
+      <publishTime>04/24/2013 12:24:28</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>10/07/2013 14:38:59</publishTime>
+    </File>
+    <File Include="bin/Mvp.Xml.dll">
+      <publishTime>04/24/2013 12:24:28</publishTime>
+    </File>
+    <File Include="bin/RadEditor.Net2.dll">
+      <publishTime>04/24/2013 12:24:32</publishTime>
+    </File>
+    <File Include="bin/Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/ExtendedImageProperties.xaml.xml">
+      <publishTime>10/07/2013 15:05:26</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Analytics.dll">
+      <publishTime>04/24/2013 12:24:32</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Client.dll">
+      <publishTime>04/24/2013 12:24:38</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Kernel.dll">
+      <publishTime>04/24/2013 12:24:46</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Logging.dll">
+      <publishTime>04/24/2013 12:24:46</publishTime>
+    </File>
+    <File Include="bin/Sitecore.NVelocity.dll">
+      <publishTime>04/24/2013 12:24:54</publishTime>
+    </File>
+    <File Include="bin/Sitecore.SharedModules.ImageCropping.dll">
+      <publishTime>10/14/2013 11:41:21</publishTime>
+    </File>
+    <File Include="bin/Sitecore.SharedModules.ImageCropping.pdb">
+      <publishTime>10/14/2013 11:41:20</publishTime>
+    </File>
+    <File Include="bin/Sitecore.SharedModules.ImageCropping.Web.dll">
+      <publishTime>10/14/2013 11:41:21</publishTime>
+    </File>
+    <File Include="bin/Sitecore.SharedModules.ImageCropping.Web.pdb">
+      <publishTime>10/14/2013 11:41:21</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Zip.dll">
+      <publishTime>04/24/2013 12:25:00</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Base.dll">
+      <publishTime>04/24/2013 12:25:00</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Report.dll">
+      <publishTime>04/24/2013 12:25:02</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Report.Web.dll">
+      <publishTime>04/24/2013 12:25:04</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Report.WebDesign.dll">
+      <publishTime>04/24/2013 12:25:04</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>10/07/2013 14:38:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>10/07/2013 14:39:00</publishTime>
+    </File>
+    <File Include="bin/System.Web.Providers.dll">
+      <publishTime>10/07/2013 14:39:00</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>10/07/2013 14:38:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>10/07/2013 14:38:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>10/07/2013 14:38:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>10/07/2013 14:38:59</publishTime>
+    </File>
+    <File Include="bin/Telerik.Web.UI.dll">
+      <publishTime>04/24/2013 12:25:06</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/ExtendedImageProperties.xaml.xml">
+      <publishTime>10/14/2013 10:53:45</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-anim-h.gif">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-anim-v.gif">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-h.gif">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-v.gif">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/imgareaselect-animated.css">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/imgareaselect-default.css">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/imgareaselect-deprecated.css">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/GPL-LICENSE.txt">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/Gruntfile.js">
+      <publishTime>10/07/2013 14:54:56</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.js">
+      <publishTime>10/07/2013 14:54:56</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.min.js">
+      <publishTime>10/07/2013 14:54:56</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/MIT-LICENSE.txt">
+      <publishTime>10/07/2013 14:55:14</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/imageproperties.js">
+      <publishTime>10/14/2013 11:28:06</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/jquery.min.js">
+      <publishTime>10/07/2013 14:56:28</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
