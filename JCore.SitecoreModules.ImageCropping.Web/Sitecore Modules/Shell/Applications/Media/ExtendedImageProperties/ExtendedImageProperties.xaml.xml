@@ -59,16 +59,16 @@
 
                   <GridPanel Columns="2" Cellpadding="2" Width="100%" runat="server">
                     <Literal Text="X1:" runat="server"/>
-                    <asp:TextBox ID="X1" runat="server" Width="50" coordinate="x1"/>
+                    <asp:TextBox ID="X1" runat="server" Width="50" coordinate="x1" ajax:Change="ChangeDimentions"/>
 
                     <Literal Text="X2:" runat="server"/>
-                    <asp:TextBox ID="X2" runat="server" Width="50" coordinate="x2"/>
+                    <asp:TextBox ID="X2" runat="server" Width="50" coordinate="x2" ajax:Change="ChangeDimentions"/>
 
                     <Literal Text="Y1:" runat="server"/>
-                    <asp:TextBox ID="Y1" runat="server" Width="50"  coordinate="y1"/>
+                    <asp:TextBox ID="Y1" runat="server" Width="50"  coordinate="y1" ajax:Change="ChangeDimentions"/>
 
                     <Literal Text="Y2:" runat="server"/>
-                    <asp:TextBox ID="Y2" runat="server" Width="50"  coordinate="y2"/>
+                    <asp:TextBox ID="Y2" runat="server" Width="50"  coordinate="y2" ajax:Change="ChangeDimentions"/>
                   </GridPanel>
                 </fieldset>
               

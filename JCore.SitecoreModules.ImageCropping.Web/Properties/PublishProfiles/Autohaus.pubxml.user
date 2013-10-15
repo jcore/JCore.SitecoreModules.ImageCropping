@@ -21,16 +21,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/24/2013 12:24:14</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.dll">
-      <publishTime>10/15/2013 17:08:15</publishTime>
+      <publishTime>10/15/2013 17:14:23</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.pdb">
-      <publishTime>10/15/2013 17:08:15</publishTime>
+      <publishTime>10/15/2013 17:14:21</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.dll">
-      <publishTime>10/15/2013 17:08:15</publishTime>
+      <publishTime>10/15/2013 17:14:23</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.pdb">
-      <publishTime>10/15/2013 17:08:15</publishTime>
+      <publishTime>10/15/2013 17:14:23</publishTime>
     </File>
     <File Include="bin/Lucene.Net.dll">
       <publishTime>04/24/2013 12:24:28</publishTime>

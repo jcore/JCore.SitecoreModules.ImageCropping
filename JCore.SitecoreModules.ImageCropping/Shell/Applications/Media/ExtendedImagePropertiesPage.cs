@@ -157,6 +157,16 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         }
 
         /// <summary>
+        /// Changes the x1.
+        /// </summary>
+        protected void ChangeDimentions()
+        {
+            // changing dimensions based on the new crop region
+            // to do....
+            SheerResponse.SetReturnValue(true);
+        }
+
+        /// <summary>
         /// Changes the height.
         /// </summary>
         protected void ChangeHeight()

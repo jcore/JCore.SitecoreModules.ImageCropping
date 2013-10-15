@@ -109,6 +109,75 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         }
 
         /// <summary>
+        /// Handles the Change event.
+        /// 
+        /// </summary>
+        /// <param name="message">The message.</param>
+        protected override void DoChange(Message message)
+        {
+            Assert.ArgumentNotNull((object)message, "message");
+            base.DoChange(message);
+            if (string.IsNullOrEmpty(this.Value))
+            {
+                this.ClearImage();
+            }
+            else
+            {
+                this.XmlValue.SetAttribute("mediapath", this.Value);
+                string path = this.Value;
+                if (!path.StartsWith("/sitecore", StringComparison.InvariantCulture))
+                    path = "/sitecore/media library" + path;
+                MediaItem mediaItem = (MediaItem)Client.ContentDatabase.GetItem(path);
+                if (mediaItem != null)
+                {
+                    string str = mediaItem.InnerItem.Paths.Path;
+                    if (str.StartsWith("/sitecore/media library", StringComparison.InvariantCulture))
+                        str = str.Substring("/sitecore/media library".Length);
+                    MediaUrlOptions shellOptions = MediaUrlOptions.GetShellOptions();
+                    string mediaUrl = MediaManager.GetMediaUrl(mediaItem, shellOptions);
+                    this.XmlValue.SetAttribute("mediaid", mediaItem.ID.ToString());
+                    this.XmlValue.SetAttribute("mediapath", str);
+                    this.XmlValue.SetAttribute("src", Images.GetUncachedImageSrc(mediaUrl));
+                }
+                else
+                {
+                    this.XmlValue.SetAttribute("mediaid", string.Empty);
+                    this.XmlValue.SetAttribute("src", string.Empty);
+                }
+                this.Update();
+                this.SetModified();
+            }
+            SheerResponse.SetReturnValue(true);
+        }
+
+        /// <summary>
+        /// Updates this instance.
+        /// 
+        /// </summary>
+        protected new void Update()
+        {
+            string src;
+            this.GetSrc(out src);
+            SheerResponse.SetAttribute(this.ID + "_image", "src", src);
+            SheerResponse.SetInnerHtml(this.ID + "_details", this.GetDetails());
+            SheerResponse.Eval("scContent.startValidators()");
+        }
+
+        /// <summary>
+        /// Clears the image.
+        /// 
+        /// </summary>
+        private void ClearImage()
+        {
+            if (this.Disabled)
+                return;
+            if (this.Value.Length > 0)
+                this.SetModified();
+            this.XmlValue = new XmlValue(string.Empty, "image");
+            this.Value = string.Empty;
+            this.Update();
+        }
+        /// <summary>
         /// Gets the image source.
         /// 
         /// </summary>
