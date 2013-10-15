@@ -26,7 +26,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         {
             Assert.ArgumentNotNull((object)args, "args");
             MediaStream outputStream = args.OutputStream;
-            if (outputStream == null)
+            if (outputStream == null || args.Options.Thumbnail)
                 return;
             if (!outputStream.AllowMemoryLoading)
             {
@@ -41,7 +41,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
                 if (imageFormat == null)
                     return;
                 CustomTransformationOptions transformationOptions = new CustomMediaOptions(args.Options).GetTransformationOptions();
-                if (!transformationOptions.ContainsResizing())
+                if (!transformationOptions.ContainsCropping())
                     return;
                 this.ApplyBackgroundColor(args, imageFormat, transformationOptions);
                 MediaStream mediaStream = outputStream;

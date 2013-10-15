@@ -119,7 +119,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             MediaItem mediaItem = (MediaItem)this.GetMediaItem();
             if (mediaItem == null)
                 return;
-            CustomMediaUrlOptions thumbnailOptions = CustomMediaUrlOptions.GetThumbnailOptions(mediaItem);
+            CustomMediaUrlOptions thumbnailOptions = CustomMediaUrlOptions.GetMediaOptions(mediaItem);
             int result;
             if (!int.TryParse(mediaItem.InnerItem["Height"], out result))
                 result = 128;
@@ -159,16 +159,32 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 string str3 = WebUtil.HtmlEncode(xmlValue.GetAttribute("width"));
                 string str4 = WebUtil.HtmlEncode(xmlValue.GetAttribute("height"));
                 string cropRegion = WebUtil.HtmlEncode(xmlValue.GetAttribute("cropregion"));
-                if (!string.IsNullOrEmpty(str3) || !string.IsNullOrEmpty(str4))
+                if (!string.IsNullOrEmpty(cropRegion))
                 {
-                    stringBuilder.Append(Translate.Text("Dimensions: {0} x {1} (Original: {2})", (object)str3, (object)str4, (object)str2));
+                    var cropRegionArr = cropRegion.Split(',');
+                    var croppedWidth = Math.Round((decimal)(int.Parse(cropRegionArr[2]) - int.Parse(cropRegionArr[0])));
+                    var croppedHeight = Math.Round((decimal)(int.Parse(cropRegionArr[3]) - int.Parse(cropRegionArr[1])));
+
+                    if (string.IsNullOrEmpty(str3) || string.IsNullOrEmpty(str4))
+                    {
+                        str3 = croppedWidth.ToString();
+                        str4 = croppedHeight.ToString();
+                    }
+                    stringBuilder.Append(Translate.Text("Dimensions: {0} x {1} (Cropped. Original: {2})", (object)str3, (object)str4, (object)str2));
                 }
                 else
                 {
-                    stringBuilder.Append(Translate.Text("Dimensions: {0}", new object[1]
+                    if (!string.IsNullOrEmpty(str3) || !string.IsNullOrEmpty(str4))
+                    {
+                        stringBuilder.Append(Translate.Text("Dimensions: {0} x {1} (Original: {2})", (object)str3, (object)str4, (object)str2));
+                    }
+                    else
+                    {
+                        stringBuilder.Append(Translate.Text("Dimensions: {0}", new object[1]
                       {
                         (object) str2
                       }));
+                    }
                 }
                 stringBuilder.Append("</div>");
                 stringBuilder.Append("<div style=\"padding:2px 0px 0px 0px\">");

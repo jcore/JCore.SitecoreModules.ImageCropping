@@ -273,5 +273,14 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             else
                 return true;
         }
+
+        /// <summary>
+        /// Determines whether this instance contains cropping.
+        /// </summary>
+        /// <returns></returns>
+        internal bool ContainsCropping()
+        {
+            return this.CropRegion != null;
+        }
     }
 }

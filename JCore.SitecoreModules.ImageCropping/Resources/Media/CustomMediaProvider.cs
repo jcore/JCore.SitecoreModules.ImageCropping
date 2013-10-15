@@ -76,19 +76,5 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             string str5 = !options.UseItemPath || !path.StartsWith(str4, StringComparison.OrdinalIgnoreCase) ? item.ID.ToShortID().ToString() : StringUtil.Mid(path, str4.Length);
             return str1 + str5 + (options.IncludeExtension ? str2 : string.Empty);
         }
-
-        /// <summary>
-        /// Gets a thumbnail URL.
-        /// </summary>
-        /// <param name="item">The media item.</param>
-        /// <returns>
-        /// The media URL.
-        /// </returns>
-        public virtual string GetThumbnailUrl(MediaItem item, CustomMediaUrlOptions options)
-        {
-            Assert.ArgumentNotNull((object)item, "item");
-            CustomMediaUrlOptions thumbnailOptions = CustomMediaUrlOptions.GetThumbnailOptions(item);
-            return this.GetMediaUrl(item, thumbnailOptions);
-        }
     }
 }

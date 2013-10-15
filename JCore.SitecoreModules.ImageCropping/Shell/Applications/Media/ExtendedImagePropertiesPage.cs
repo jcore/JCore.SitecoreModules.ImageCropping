@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI.WebControls;
 using Sitecore;
 using Sitecore.Configuration;
@@ -13,6 +14,7 @@ using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Resources.Media;
 using Sitecore.Shell.Applications.ContentEditor;
+using Sitecore.Text;
 using Sitecore.Web;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Sheer;
@@ -44,6 +46,10 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         /// The original size.
         /// </summary>
         protected global::Sitecore.Web.UI.HtmlControls.Literal OriginalSize;
+        /// <summary>
+        /// The cropped size
+        /// </summary>
+        protected global::Sitecore.Web.UI.HtmlControls.Literal CroppedSize;
         /// <summary>
         /// The original text.
         /// </summary>
@@ -168,7 +174,17 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 }
                 if (this.Aspect.Checked)
                 {
-                    this.WidthEdit.Text = ((int)((double)num / (double)this.ImageHeight * (double)this.ImageWidth)).ToString();
+                    if (!string.IsNullOrEmpty(this.GetCoordinateValue(this.XmlValue, "y2")))
+                    {
+                        var croppedWidth = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "x2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "x1"))));
+                        var croppedHeight = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "y2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "y1"))));
+                        var scalingFactor = num / croppedHeight;
+                        this.WidthEdit.Text = ((int)(croppedWidth * scalingFactor)).ToString();
+                    }
+                    else
+                    {
+                        this.WidthEdit.Text = ((int)((double)num / (double)this.ImageHeight * (double)this.ImageWidth)).ToString();
+                    }
                     SheerResponse.SetAttribute(this.WidthEdit.ClientID, "value", this.WidthEdit.Text);
                 }
             }
@@ -193,7 +209,17 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 }
                 if (this.Aspect.Checked)
                 {
-                    this.HeightEdit.Text = ((int)((double)num / (double)this.ImageWidth * (double)this.ImageHeight)).ToString();
+                    if (!string.IsNullOrEmpty(this.GetCoordinateValue(this.XmlValue, "x2")))
+                    {
+                        var croppedWidth = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "x2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "x1"))));
+                        var croppedHeight = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "y2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "y1"))));
+                        var scalingFactor = num / croppedWidth;
+                        this.HeightEdit.Text = ((int)(croppedHeight * scalingFactor)).ToString();
+                    }
+                    else
+                    {
+                        this.HeightEdit.Text = ((int)((double)num / (double)this.ImageWidth * (double)this.ImageHeight)).ToString();
+                    }
                     SheerResponse.SetAttribute(this.HeightEdit.ClientID, "value", this.HeightEdit.Text);
                 }
             }
@@ -235,7 +261,6 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         {
             string[] coordinates = { this.X1.Text, this.Y1.Text, this.X2.Text, this.Y2.Text };
             return string.Join(",", coordinates);
-            return string.Empty;
         }
 
         /// <summary>
@@ -272,7 +297,10 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
             else
                 this.Aspect.Checked = true;
             if (this.ImageWidth > 0)
+            {
                 this.OriginalSize.Text = Translate.Text("Original Dimensions: {0} x {1}", (object)this.ImageWidth, (object)this.ImageHeight);
+            }
+            
             if (MainUtil.GetLong((object)obj["Size"], 0L) >= Settings.Media.MaxSizeInMemory)
             {
                 this.HeightEdit.Enabled = false;
@@ -313,11 +341,34 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 this.Aspect.Checked = false;
                 this.Aspect.Disabled = true;
             }
+
+            if (!string.IsNullOrEmpty(this.GetCoordinateValue(xmlValue, "x2")))
+            {
+                var croppedWidth = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(xmlValue, "x2")) - int.Parse(this.GetCoordinateValue(xmlValue, "x1"))));
+                var croppedHeight = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(xmlValue, "y2")) - int.Parse(this.GetCoordinateValue(xmlValue, "y1"))));
+
+                //var str3 = xmlValue.GetAttribute("width");
+                //var str4 = xmlValue.GetAttribute("height");
+
+                //if (string.IsNullOrEmpty(str3) || string.IsNullOrEmpty(str4))
+                //{
+                //    str3 = croppedWidth.ToString();
+                //    str4 = croppedHeight.ToString();
+                //}
+                //else
+                //{
+                //    str3 = Math.Round((decimal)croppedWidth * int.Parse(str4) / croppedHeight).ToString();
+                //}
+                this.CroppedSize.Text = Translate.Text("Cropped Dimensions before resizing: {0} x {1}", (object)croppedWidth, (object)croppedHeight);
+            }
+
             if (!MainUtil.GetBool(urlHandle["disablewidth"], false))
                 return;
             this.WidthEdit.Enabled = false;
             this.Aspect.Checked = false;
-            this.Aspect.Disabled = true;            
+            this.Aspect.Disabled = true;
+
+            
         }
 
         /// <summary>

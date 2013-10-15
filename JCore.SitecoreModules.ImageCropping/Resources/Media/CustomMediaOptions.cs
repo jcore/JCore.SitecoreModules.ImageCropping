@@ -43,16 +43,20 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// </returns>
         public new CustomTransformationOptions GetTransformationOptions()
         {
-            return new CustomTransformationOptions()
+            var options =  new CustomTransformationOptions()
             {
                 AllowStretch = this.AllowStretch,
                 BackgroundColor = this.BackgroundColor,
                 IgnoreAspectRatio = this.IgnoreAspectRatio,
                 MaxSize = new Size(this.MaxWidth, this.MaxHeight),
                 Scale = this.Scale,
-                Size = new Size(this.Width, this.Height),
-                CropRegion = this.CropRegion.Split(',')
+                Size = new Size(this.Width, this.Height)
             };
+            if (!string.IsNullOrEmpty(this.CropRegion))
+            {
+                options.CropRegion = this.CropRegion.Split(',');
+            }
+            return options;
         }
     }
 }

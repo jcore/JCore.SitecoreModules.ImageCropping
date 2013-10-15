@@ -7,8 +7,8 @@
     <ProjectGuid>{646862EA-9709-4C37-AB92-07FEC64AA865}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sitecore.SharedModules.ImageCropping</RootNamespace>
-    <AssemblyName>Sitecore.SharedModules.ImageCropping</AssemblyName>
+    <RootNamespace>JCore.SitecoreModules.ImageCropping</RootNamespace>
+    <AssemblyName>JCore.SitecoreModules.ImageCropping</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -148,7 +148,6 @@
     <Compile Include="Resources\Media\CustomMediaUrlOptions.cs" />
     <Compile Include="Resources\Media\CustomMediaProvider.cs" />
     <Compile Include="Resources\Media\CustomTransformationOptions.cs" />
-    <Compile Include="Resources\Media\ResizeProcessor.cs" />
     <Compile Include="Shell\Applications\Media\ExtendedImagePropertiesPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -102,6 +102,10 @@
 
               <Border runat="server"/>
               <Border Padding="4px 0px 0px 0px" runat="server">
+                <Literal ID="CroppedSize" runat="server" />
+              </Border>
+              <Border runat="server"/>
+              <Border Padding="4px 0px 0px 0px" runat="server">
                 <Literal ID="OriginalSize" runat="server" />
               </Border>
               <asp:HiddenField runat="server" ID="OriginalWidth"></asp:HiddenField>

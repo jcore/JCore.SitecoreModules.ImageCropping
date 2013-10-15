@@ -78,12 +78,11 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        public new static CustomMediaUrlOptions GetThumbnailOptions(MediaItem item)
+        public new static CustomMediaUrlOptions GetMediaOptions(MediaItem item)
         {
             Assert.ArgumentNotNull((object)item, "item");
             CustomMediaUrlOptions shellOptions = CustomMediaUrlOptions.GetShellOptions();
             shellOptions.Database = item.Database;
-            shellOptions.Thumbnail = true;
             shellOptions.DisableBrowserCache = true;
             shellOptions.UseDefaultIcon = true;
             shellOptions.BackgroundColor = Color.White;

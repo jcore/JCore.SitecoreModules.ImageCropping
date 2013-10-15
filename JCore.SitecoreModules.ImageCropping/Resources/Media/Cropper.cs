@@ -297,35 +297,9 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         {
             try
             {
-                int _x1 = 0;
-                int _y1 = 0;
-                int _x2 = 0;
-                int _y2 = 0;
-
-                string[] region = options.CropRegion;
-
-                if (region.Length >= 4)
-                {
-                    _x1 = int.TryParse(region[0], out _x1) ? _x1 : 0;
-                    _y1 = int.TryParse(region[1], out _y1) ? _y1 : 0;
-                    _x2 = int.TryParse(region[2], out _x2) ? _x2 : 0;
-                    _y2 = int.TryParse(region[3], out _y2) ? _y2 : 0;
-
-                    if (_x2 > image.Width) _x2 = image.Width;
-                    if (_y2 > image.Height) _y2 = image.Height;
-
-                    if (_x1 < 0) _x1 = 0;
-                    if (_y1 < 0) _y1 = 0;
-
-                }
-
-                int newWidth = _x2 - _x1;
-                int newHeight = _y2 - _y1;
-
                 //cropping  
-
                 var bmpImage = new Bitmap(image);
-                var rectangle = new Rectangle(_x1, _y1, newWidth, newHeight);
+                var rectangle = GetRectangle(image, options);
                 var newImage = bmpImage.Clone(rectangle, bmpImage.PixelFormat);
 
                 return newImage;
@@ -337,6 +311,57 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
                 return new Bitmap(image);
 
             }
+        }
+
+        /// <summary>
+        /// Gets the rectangle.
+        /// </summary>
+        /// <param name="image">The image.</param>
+        /// <param name="options">The options.</param>
+        /// <returns></returns>
+        private Rectangle GetRectangle(Image image, CustomTransformationOptions options)
+        {
+            if (options.CropRegion == null && options.CropRegion.Length != 4)
+            {
+                return new Rectangle(0, 0, image.Width, image.Height);
+            }
+            var _x1 = 0;
+            var _y1 = 0;
+            var _x2 = 0;
+            var _y2 = 0;
+
+            var _x1Convert = int.TryParse(options.CropRegion[0], out _x1) ? _x1 : 0;
+            var _y1Convert = int.TryParse(options.CropRegion[1], out _y1) ? _y1 : 0;
+            var _x2Convert = int.TryParse(options.CropRegion[2], out _x2) ? _x2 : 0;
+            var _y2Convert = int.TryParse(options.CropRegion[3], out _y2) ? _y2 : 0;
+
+            if (_x2 > image.Width)
+            {
+                _x2 = image.Width;
+            }
+
+            if (_y2 > image.Height)
+            {
+                _y2 = image.Height;
+            }
+
+            if (_x1 > image.Width)
+            {
+                _x1 = 0;
+            }
+
+            if (_y1 > image.Height)
+            {
+                _y1 = 0;
+            }
+
+            if (_x1 < 0) _x1 = 0;
+            if (_y1 < 0) _y1 = 0;
+
+            var newWidth = _x2 - _x1;
+            var newHeight = _y2 - _y1;
+
+            return new Rectangle(_x1, _y1, newWidth, newHeight);
         }
         /// <summary>
         /// Gets the index of the specified color.
