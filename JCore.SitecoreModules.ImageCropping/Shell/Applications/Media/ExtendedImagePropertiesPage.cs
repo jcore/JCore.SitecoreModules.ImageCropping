@@ -162,7 +162,17 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         protected void ChangeDimentions()
         {
             // changing dimensions based on the new crop region
-            // to do....
+            var x1 = this.X1.Text;
+            var x2 = this.X2.Text;
+            var y1 = this.Y1.Text;
+            var y2 = this.Y2.Text;
+
+            var width = this.WidthEdit.Text;
+
+            if (!string.IsNullOrEmpty(width))
+            {
+                this.ChangeWidth();
+            }
             SheerResponse.SetReturnValue(true);
         }
 
@@ -186,10 +196,9 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 {
                     if (!string.IsNullOrEmpty(this.GetCoordinateValue(this.XmlValue, "y2")))
                     {
-                        var croppedWidth = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "x2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "x1"))));
-                        var croppedHeight = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "y2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "y1"))));
-                        var scalingFactor = num / croppedHeight;
-                        this.WidthEdit.Text = ((int)(croppedWidth * scalingFactor)).ToString();
+                        var croppedWidth = Math.Round((decimal)(int.Parse(this.X2.Text) - int.Parse(this.X1.Text)));
+                        var croppedHeight = Math.Round((decimal)(int.Parse(this.Y2.Text) - int.Parse(this.Y1.Text)));
+                        this.WidthEdit.Text = ((int)(croppedWidth * num / croppedHeight)).ToString();
                     }
                     else
                     {
@@ -221,10 +230,9 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 {
                     if (!string.IsNullOrEmpty(this.GetCoordinateValue(this.XmlValue, "x2")))
                     {
-                        var croppedWidth = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "x2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "x1"))));
-                        var croppedHeight = Math.Round((decimal)(int.Parse(this.GetCoordinateValue(this.XmlValue, "y2")) - int.Parse(this.GetCoordinateValue(this.XmlValue, "y1"))));
-                        var scalingFactor = num / croppedWidth;
-                        this.HeightEdit.Text = ((int)(croppedHeight * scalingFactor)).ToString();
+                        var croppedWidth = Math.Round((decimal)(int.Parse(this.X2.Text) - int.Parse(this.X1.Text)));
+                        var croppedHeight = Math.Round((decimal)(int.Parse(this.Y2.Text) - int.Parse(this.Y1.Text)));
+                        this.HeightEdit.Text = ((int)(croppedHeight * num / croppedWidth)).ToString();
                     }
                     else
                     {

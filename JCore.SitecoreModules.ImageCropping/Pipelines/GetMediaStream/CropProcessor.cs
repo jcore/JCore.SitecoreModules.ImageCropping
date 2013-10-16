@@ -5,102 +5,66 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Sitecore.Collections;
+using JCore.SitecoreModules.ImageCropping.Pipelines.GetMediaStream;
+using JCore.SitecoreModules.ImageCropping.Resources.Media;
+using Sitecore.Configuration;
 using Sitecore.Diagnostics;
 using Sitecore.Resources.Media;
-using Sitecore.SharedModules.ImageCropping.Resources.Media;
 
-namespace Sitecore.SharedModules.ImageCropping.Pipelines.GetMediaStream
+namespace JCore.SitecoreModules.ImageCropping.Pipelines.GetMediaStream
 {
     /// <summary>
-    /// Pipeline processor that is responsible for image cropping.
+    /// CropProcessor class
+    /// 
     /// </summary>
     public class CropProcessor
     {
-
         /// <summary>
-        /// Starts the Processor. Requires "Media.Video_filetypes" setting in web.config. Crops specified image based on the passed crop region.
+        /// Runs the processor.
+        /// 
         /// </summary>
-        /// <param name="args">Sitecore.Resources.Media.GetMediaStreamPipelineArgs.</param>
-        public void Process(Sitecore.Resources.Media.GetMediaStreamPipelineArgs args)
+        /// <param name="args">The arguments.</param>
+        public void Process(GetMediaStreamPipelineArgs args)
         {
-
-            string _rgn = "";
-            int _croppedWidth = 0;
-            int _croppedHeight = 0;
-            string extension = args.MediaData.Extension;
-
-            if (Sitecore.Configuration.Settings.GetSetting("Media.Video_filetypes").IndexOf(extension) > -1)
-            {
-                //args.Options.Thumbnail = true;
-                return;
-            }
-
-            if (Sitecore.Configuration.Settings.GetSetting("Media.Doc_filetypes").IndexOf(extension) > -1)
-            {
-                return;
-            }
-
-
-            StringDictionary sDec = args.Options.CustomOptions;
-
+            Assert.ArgumentNotNull((object)args, "args");
             MediaStream outputStream = args.OutputStream;
-
-            IEnumerator<string> enumerator = sDec.Keys.GetEnumerator();
-            IEnumerator<string> enumeratorValues = sDec.Values.GetEnumerator();
-
-            while (enumerator.MoveNext())
+            if (outputStream == null || args.Options.Thumbnail)
+                return;
+            if (!outputStream.AllowMemoryLoading)
             {
-                enumeratorValues.MoveNext();
-
-                string current = enumerator.Current;
-                string currentValue = enumeratorValues.Current;
-
-                if (current == "rgn")
-                {
-                    _rgn = currentValue;
-                }
-                else if (current == "cw")
-                {
-                    _croppedWidth = Convert.ToInt32(currentValue);
-                }
-                else if (current == "ch")
-                {
-                    _croppedHeight = Convert.ToInt32(currentValue);
-                }
+                Tracer.Error((object)"Could not crop image as it was larger than the maximum size allowed for memory processing. Media item: {0}", (object)outputStream.MediaItem.Path);
             }
-
-            if (_rgn != "0,0,0,0" && _rgn != "" && !args.Options.Thumbnail)
+            else
             {
-                if (outputStream != null)
-                {
-                    CropOptions cropOptions = new CropOptions();
-                    TransformationOptions transformationOptions = args.Options.GetTransformationOptions();
-                    cropOptions.AllowStretch = transformationOptions.AllowStretch;
-                    cropOptions.BackgroundColor = transformationOptions.BackgroundColor;
-                    cropOptions.MaxSize = transformationOptions.MaxSize;
-                    cropOptions.Scale = transformationOptions.Scale;
-                    cropOptions.Size = transformationOptions.Size;
-                    cropOptions.Region = _rgn;
-                    cropOptions.CroppedHeight = _croppedHeight;
-                    cropOptions.CroppedWidth = _croppedWidth;
-
-                    ImageFormat imageFormat = MediaManager.Config.GetImageFormat(extension);
-                    Assert.IsNotNull(imageFormat, typeof(ImageFormat), "Extension: '{0}'.", new object[] { extension });
-                    Stream stream2 = ImageEffectsCrop.CropImageStream(outputStream.Stream, cropOptions, imageFormat);
-                    if (stream2 != null)
-                    {
-                        args.OutputStream = new MediaStream(stream2, extension, outputStream.MediaItem);
-                    }
-                }
-                else
-                {
-                    Log.Error("--------  CropProcessor : outputStream is null", this);
-                }
+                if (!args.MediaData.MimeType.StartsWith("image/", StringComparison.Ordinal))
+                    return;
+                string extension = args.MediaData.Extension;
+                ImageFormat imageFormat = MediaManager.Config.GetImageFormat(extension, (ImageFormat)null);
+                if (imageFormat == null)
+                    return;
+                CustomTransformationOptions transformationOptions = new CustomMediaOptions(args.Options).GetTransformationOptions();
+                if (!transformationOptions.ContainsCropping())
+                    return;
+                this.ApplyBackgroundColor(args, imageFormat, transformationOptions);
+                MediaStream mediaStream = outputStream;
+                Stream stream = CustomMediaManager.Effects.TransformImageStream(mediaStream.Stream, transformationOptions, imageFormat);
+                args.OutputStream = new MediaStream(stream, extension, mediaStream.MediaItem);
             }
-
-            return;
         }
 
+        /// <summary>
+        /// Applies the color of the background.
+        /// 
+        /// </summary>
+        /// <param name="args">The arguments.</param><param name="imageFormat">The image format.</param><param name="transformationOptions">The transformation options.</param>
+        protected virtual void ApplyBackgroundColor(GetMediaStreamPipelineArgs args, ImageFormat imageFormat, CustomTransformationOptions transformationOptions)
+        {
+            Assert.ArgumentNotNull((object)args, "args");
+            Assert.ArgumentNotNull((object)imageFormat, "imageFormat");
+            Assert.ArgumentNotNull((object)transformationOptions, "transformationOptions");
+            if (!transformationOptions.BackgroundColor.IsEmpty || imageFormat != ImageFormat.Bmp && imageFormat != ImageFormat.Gif && imageFormat != ImageFormat.Jpeg)
+                return;
+            transformationOptions.BackgroundColor = Settings.Media.DefaultImageBackgroundColor;
+        }
     }
 }

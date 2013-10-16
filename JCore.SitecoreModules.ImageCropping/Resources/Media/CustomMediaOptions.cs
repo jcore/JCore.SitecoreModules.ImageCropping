@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JCore.SitecoreModules.ImageCropping.Pipelines.GetMediaStream;
 using Sitecore.Resources.Media;
 
 namespace JCore.SitecoreModules.ImageCropping.Resources.Media

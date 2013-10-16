@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JCore.SitecoreModules.ImageCropping.Pipelines.GetMediaStream;
 using Sitecore.Configuration;
 using Sitecore.Diagnostics;
 using Sitecore.ImageLib;

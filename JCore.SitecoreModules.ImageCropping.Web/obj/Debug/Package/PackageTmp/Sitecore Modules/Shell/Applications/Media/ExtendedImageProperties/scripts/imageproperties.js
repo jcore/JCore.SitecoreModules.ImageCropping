@@ -34,6 +34,7 @@ function updateCoordinates(img, selection) {
     $jQuery("input[coordinate='y1']").val(adjustToSize(selection.y1));
     $jQuery("input[coordinate='x2']").val(adjustToSize(selection.x2));
     $jQuery("input[coordinate='y2']").val(adjustToSize(selection.y2));
+    scForm.postEvent(this, event, 'ChangeDimentions');
 }
 
 function adjustToSize(value) {   

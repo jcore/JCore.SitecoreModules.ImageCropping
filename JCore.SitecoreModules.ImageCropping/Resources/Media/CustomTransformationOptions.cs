@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sitecore.Configuration;
 
-namespace JCore.SitecoreModules.ImageCropping.Resources.Media
+namespace JCore.SitecoreModules.ImageCropping.Pipelines.GetMediaStream
 {
     /// <summary>
     /// CustomTransformationOptions class
