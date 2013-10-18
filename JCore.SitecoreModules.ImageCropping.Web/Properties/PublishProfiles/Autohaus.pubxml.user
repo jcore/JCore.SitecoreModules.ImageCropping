@@ -21,16 +21,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/24/2013 12:24:14</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.dll">
-      <publishTime>10/16/2013 14:13:21</publishTime>
+      <publishTime>10/17/2013 19:43:40</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.pdb">
-      <publishTime>10/16/2013 14:13:21</publishTime>
+      <publishTime>10/17/2013 19:43:40</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.dll">
-      <publishTime>10/16/2013 14:13:22</publishTime>
+      <publishTime>10/17/2013 19:43:41</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.pdb">
-      <publishTime>10/16/2013 14:13:22</publishTime>
+      <publishTime>10/17/2013 19:43:41</publishTime>
     </File>
     <File Include="bin/Lucene.Net.dll">
       <publishTime>04/24/2013 12:24:28</publishTime>
@@ -108,7 +108,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/24/2013 12:25:06</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/ExtendedImageProperties.xaml.xml">
-      <publishTime>10/16/2013 07:25:47</publishTime>
+      <publishTime>10/17/2013 20:01:40</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-anim-h.gif">
       <publishTime>10/07/2013 14:55:14</publishTime>
@@ -144,7 +144,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/07/2013 14:55:14</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/imageproperties.js">
-      <publishTime>10/16/2013 07:27:39</publishTime>
+      <publishTime>10/17/2013 20:06:02</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/jquery.min.js">
       <publishTime>10/07/2013 14:56:28</publishTime>

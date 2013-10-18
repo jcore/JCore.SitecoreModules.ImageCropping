@@ -48,7 +48,7 @@
 
             <GridPanel Columns="2" Cellpadding="2" Width="100%" runat="server">
               <Border runat="server" GridPanel.VAlign="top" Style="display:block">
-                <asp:Image runat="server" ID="Img" Height="300"></asp:Image>
+                <asp:Image runat="server" ID="Img" Height="300"></asp:Image>                
               </Border>
               
               <Border runat="server" GridPanel.VAlign="top">
@@ -56,19 +56,28 @@
                   <legend>
                     <Literal Text="Region" runat="server"/>
                   </legend>
-
                   <GridPanel Columns="2" Cellpadding="2" Width="100%" runat="server">
-                    <Literal Text="X1:" runat="server"/>
-                    <asp:TextBox ID="X1" runat="server" Width="50" coordinate="x1"/>
 
-                    <Literal Text="X2:" runat="server"/>
-                    <asp:TextBox ID="X2" runat="server" Width="50" coordinate="x2"/>
+                    <GridPanel Columns="4" Cellpadding="2" Width="100%" runat="server">
+                      <Literal Text="Region Settings:" runat="server"/>
+                      <button type="button" id="free">Free</button>
+                      <button type="button" id="square">Square</button>
+                      <button type="button" id="clear">Clear</button>
+                    </GridPanel>
 
-                    <Literal Text="Y1:" runat="server"/>
-                    <asp:TextBox ID="Y1" runat="server" Width="50"  coordinate="y1"/>
+                    <GridPanel Columns="4" Cellpadding="2"  runat="server">
+                      <Literal Text="X1:" runat="server"/>
+                      <asp:TextBox ID="X1" runat="server" Width="50" coordinate="x1"/>
 
-                    <Literal Text="Y2:" runat="server"/>
-                    <asp:TextBox ID="Y2" runat="server" Width="50"  coordinate="y2"/>
+                      <Literal Text="X2:" runat="server"/>
+                      <asp:TextBox ID="X2" runat="server" Width="50" coordinate="x2"/>
+
+                      <Literal Text="Y1:" runat="server"/>
+                      <asp:TextBox ID="Y1" runat="server" Width="50"  coordinate="y1"/>
+
+                      <Literal Text="Y2:" runat="server"/>
+                      <asp:TextBox ID="Y2" runat="server" Width="50"  coordinate="y2"/>
+                    </GridPanel>
                   </GridPanel>
                 </fieldset>
               

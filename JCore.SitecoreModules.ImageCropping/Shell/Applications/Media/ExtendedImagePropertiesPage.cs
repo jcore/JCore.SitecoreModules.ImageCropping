@@ -161,12 +161,6 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         /// </summary>
         protected void ChangeDimentions()
         {
-            // changing dimensions based on the new crop region
-            var x1 = this.X1.Text;
-            var x2 = this.X2.Text;
-            var y1 = this.Y1.Text;
-            var y2 = this.Y2.Text;
-
             var width = this.WidthEdit.Text;
 
             if (!string.IsNullOrEmpty(width))
@@ -194,7 +188,7 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 }
                 if (this.Aspect.Checked)
                 {
-                    if (!string.IsNullOrEmpty(this.GetCoordinateValue(this.XmlValue, "y2")))
+                    if (!string.IsNullOrEmpty(this.X2.Text) && !string.IsNullOrEmpty(this.X1.Text) && !string.IsNullOrEmpty(this.Y2.Text) && !string.IsNullOrEmpty(this.Y2.Text))
                     {
                         var croppedWidth = Math.Round((decimal)(int.Parse(this.X2.Text) - int.Parse(this.X1.Text)));
                         var croppedHeight = Math.Round((decimal)(int.Parse(this.Y2.Text) - int.Parse(this.Y1.Text)));
@@ -228,7 +222,7 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                 }
                 if (this.Aspect.Checked)
                 {
-                    if (!string.IsNullOrEmpty(this.GetCoordinateValue(this.XmlValue, "x2")))
+                    if (!string.IsNullOrEmpty(this.X2.Text) && !string.IsNullOrEmpty(this.X1.Text) && !string.IsNullOrEmpty(this.Y2.Text) && !string.IsNullOrEmpty(this.Y2.Text))
                     {
                         var croppedWidth = Math.Round((decimal)(int.Parse(this.X2.Text) - int.Parse(this.X1.Text)));
                         var croppedHeight = Math.Round((decimal)(int.Parse(this.Y2.Text) - int.Parse(this.Y1.Text)));
@@ -262,10 +256,7 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
             xmlValue.SetAttribute("hspace", this.HSpace.Text);
             xmlValue.SetAttribute("vspace", this.VSpace.Text);
             var cropRegion = this.GenerateCropRegion();
-            if (!string.IsNullOrEmpty(cropRegion))
-            {
-                xmlValue.SetAttribute("cropregion", cropRegion);
-            }
+            xmlValue.SetAttribute("cropregion", cropRegion);
             SheerResponse.SetDialogValue(xmlValue.ToString());
             base.OK_Click();
         }
@@ -277,8 +268,12 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         /// <exception cref="System.NotImplementedException"></exception>
         private string GenerateCropRegion()
         {
-            string[] coordinates = { this.X1.Text, this.Y1.Text, this.X2.Text, this.Y2.Text };
-            return string.Join(",", coordinates);
+            if (!string.IsNullOrEmpty(this.X2.Text) && !string.IsNullOrEmpty(this.X1.Text) && !string.IsNullOrEmpty(this.Y2.Text) && !string.IsNullOrEmpty(this.Y2.Text))
+            {
+                string[] coordinates = { this.X1.Text, this.Y1.Text, this.X2.Text, this.Y2.Text };
+                return string.Join(",", coordinates);
+            }
+            return string.Empty;
         }
 
         /// <summary>

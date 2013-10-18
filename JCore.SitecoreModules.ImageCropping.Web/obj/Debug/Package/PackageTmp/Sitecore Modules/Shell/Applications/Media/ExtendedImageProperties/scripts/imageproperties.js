@@ -1,8 +1,9 @@
 ﻿var $jQuery = jQuery.noConflict();
 var scalingFactor = 1;
+var imageId = "#ctl00_ctl00_ctl00_ctl00_ctl04_Img";
 
 $jQuery(function () {
-    var media = $jQuery("#ctl00_ctl00_ctl00_ctl00_ctl04_Img");
+    var media = $jQuery(imageId);
 
     scalingFactor = CalculateScalingFactor();
 
@@ -18,7 +19,7 @@ $jQuery(function () {
             y1: y1,
             x2: x2,
             y2: y2,
-            onSelectEnd: updateCoordinates, 
+            onSelectEnd: updateCoordinates,
             handles: true
         });
     } else {
@@ -27,6 +28,36 @@ $jQuery(function () {
             handles: true
         });
     }
+
+    $jQuery("#square").click(function () {
+        var media = $jQuery(imageId);
+        var ias = media.imgAreaSelect({
+            aspectRatio: "1:1",
+            onSelectEnd: updateCoordinates,
+            handles: true
+        });
+    });
+    $jQuery("#free").click(function () {
+        var media = $jQuery(imageId);
+        var ias = media.imgAreaSelect({
+            aspectRatio: false,
+            onSelectEnd: updateCoordinates,
+            handles: true
+        });
+    });
+    $jQuery("#clear").click(function () {
+        var media = $jQuery(imageId);
+        var ias = media.imgAreaSelect({
+            remove: true,
+            onSelectEnd: updateCoordinates,
+            handles: true
+        });
+        ias = media.imgAreaSelect({
+            onSelectEnd: updateCoordinates,
+            handles: true
+        });
+        updateCoordinates(null, { x1: "", y1: "", x2: "", y2: "" });
+    });
 });
 
 function updateCoordinates(img, selection) {
@@ -37,11 +68,13 @@ function updateCoordinates(img, selection) {
     scForm.postEvent(this, event, 'ChangeDimentions');
 }
 
-function adjustToSize(value) {   
+function adjustToSize(value) {
+    if (!value) return "";
     return Math.round(value * scalingFactor);
 }
 
 function adjustToCoordinate(value) {
+    if (!value) return "";
     return Math.round(value / scalingFactor);
 }
 
