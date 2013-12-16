@@ -13,7 +13,7 @@ $jQuery(function () {
     var x2 = adjustToCoordinate($jQuery("input[coordinate='x2']").val());
     var y2 = adjustToCoordinate($jQuery("input[coordinate='y2']").val());
 
-    if (x1 > 0 && y1 > 0 && x2 > 0 && y2 > 0) {
+    if (x1 >= 0 && y1 >= 0 && x2 > 0 && y2 > 0) {
         media.imgAreaSelect({
             x1: x1,
             y1: y1,
@@ -69,12 +69,12 @@ function updateCoordinates(img, selection) {
 }
 
 function adjustToSize(value) {
-    if (!value) return "";
+    if (!value && value != 0) return "";
     return Math.round(value * scalingFactor);
 }
 
 function adjustToCoordinate(value) {
-    if (!value) return "";
+    if (!value && value != 0) return "";
     return Math.round(value / scalingFactor);
 }
 

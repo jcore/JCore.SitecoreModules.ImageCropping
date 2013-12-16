@@ -230,9 +230,9 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 string cropRegion = WebUtil.HtmlEncode(xmlValue.GetAttribute("cropregion"));
                 if (!string.IsNullOrEmpty(cropRegion))
                 {
-                    var cropRegionArr = cropRegion.Split(',');
-                    var croppedWidth = Math.Round((decimal)(int.Parse(cropRegionArr[2]) - int.Parse(cropRegionArr[0])));
-                    var croppedHeight = Math.Round((decimal)(int.Parse(cropRegionArr[3]) - int.Parse(cropRegionArr[1])));
+                    var cropRegionArr = cropRegion.Split(',');                  
+                    var croppedWidth = Math.Round((decimal)ConvertToInt(cropRegionArr[2]) - ConvertToInt(cropRegionArr[0]));
+                    var croppedHeight = Math.Round((decimal)ConvertToInt(cropRegionArr[3]) - ConvertToInt(cropRegionArr[1]));
 
                     if (string.IsNullOrEmpty(str3) || string.IsNullOrEmpty(str4))
                     {
@@ -279,6 +279,21 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             if (str1.Length == 0)
                 str1 = Translate.Text("This media item has no details.");
             return str1;
+        }
+
+        /// <summary>
+        /// Converts to int.
+        /// </summary>
+        /// <param name="p">The p.</param>
+        /// <returns></returns>
+        private int ConvertToInt(string value)
+        {
+            var intValue = 0;
+            if (int.TryParse(value, out intValue))
+            {
+                intValue = 0;
+            }
+            return intValue;
         }
 
         /// <summary>

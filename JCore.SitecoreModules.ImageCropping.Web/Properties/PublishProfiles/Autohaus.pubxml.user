@@ -9,55 +9,55 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Config/Include/Sitecore.SharedModules.ImageCropping.config">
-      <publishTime>10/16/2013 13:35:14</publishTime>
+      <publishTime>10/17/2013 20:08:29</publishTime>
     </File>
     <File Include="bin/ComponentArt.Web.UI.dll">
-      <publishTime>04/24/2013 12:12:10</publishTime>
+      <publishTime>10/01/2013 16:15:56</publishTime>
     </File>
     <File Include="bin/HtmlAgilityPack.dll">
-      <publishTime>04/24/2013 12:24:10</publishTime>
+      <publishTime>10/01/2013 16:15:56</publishTime>
     </File>
     <File Include="bin/ITHit.WebDAV.Server.dll">
-      <publishTime>04/24/2013 12:24:14</publishTime>
+      <publishTime>10/01/2013 16:15:56</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.dll">
-      <publishTime>10/17/2013 19:43:40</publishTime>
+      <publishTime>12/16/2013 12:29:53</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.pdb">
-      <publishTime>10/17/2013 19:43:40</publishTime>
+      <publishTime>12/16/2013 12:29:53</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.dll">
-      <publishTime>10/17/2013 19:43:41</publishTime>
+      <publishTime>12/16/2013 12:29:54</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.pdb">
-      <publishTime>10/17/2013 19:43:41</publishTime>
+      <publishTime>12/16/2013 12:29:54</publishTime>
     </File>
     <File Include="bin/Lucene.Net.dll">
-      <publishTime>04/24/2013 12:24:28</publishTime>
+      <publishTime>10/01/2013 16:15:57</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>07/19/2012 11:59:52</publishTime>
     </File>
     <File Include="bin/Mvp.Xml.dll">
-      <publishTime>04/24/2013 12:24:28</publishTime>
+      <publishTime>10/01/2013 16:15:57</publishTime>
     </File>
     <File Include="bin/RadEditor.Net2.dll">
-      <publishTime>04/24/2013 12:24:32</publishTime>
+      <publishTime>10/01/2013 16:15:57</publishTime>
     </File>
     <File Include="bin/Sitecore.Analytics.dll">
-      <publishTime>04/24/2013 12:24:32</publishTime>
+      <publishTime>10/01/2013 16:15:57</publishTime>
     </File>
     <File Include="bin/Sitecore.Client.dll">
-      <publishTime>04/24/2013 12:24:38</publishTime>
+      <publishTime>10/01/2013 16:15:57</publishTime>
     </File>
     <File Include="bin/Sitecore.Kernel.dll">
-      <publishTime>04/24/2013 12:24:46</publishTime>
+      <publishTime>10/01/2013 16:15:58</publishTime>
     </File>
     <File Include="bin/Sitecore.Logging.dll">
-      <publishTime>04/24/2013 12:24:46</publishTime>
+      <publishTime>10/01/2013 16:15:59</publishTime>
     </File>
     <File Include="bin/Sitecore.NVelocity.dll">
-      <publishTime>04/24/2013 12:24:54</publishTime>
+      <publishTime>10/01/2013 16:15:59</publishTime>
     </File>
     <File Include="bin/Sitecore.SharedModules.ImageCropping.dll">
       <publishTime>10/15/2013 11:44:45</publishTime>
@@ -72,19 +72,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/15/2013 11:44:46</publishTime>
     </File>
     <File Include="bin/Sitecore.Zip.dll">
-      <publishTime>04/24/2013 12:25:00</publishTime>
+      <publishTime>10/01/2013 16:15:59</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Base.dll">
-      <publishTime>04/24/2013 12:25:00</publishTime>
+      <publishTime>10/01/2013 16:15:59</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Report.dll">
-      <publishTime>04/24/2013 12:25:02</publishTime>
+      <publishTime>10/01/2013 16:15:59</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Report.Web.dll">
-      <publishTime>04/24/2013 12:25:04</publishTime>
+      <publishTime>10/01/2013 16:16:00</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Report.WebDesign.dll">
-      <publishTime>04/24/2013 12:25:04</publishTime>
+      <publishTime>10/01/2013 16:16:00</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>01/05/2011 14:45:38</publishTime>
@@ -105,7 +105,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/05/2011 14:45:38</publishTime>
     </File>
     <File Include="bin/Telerik.Web.UI.dll">
-      <publishTime>04/24/2013 12:25:06</publishTime>
+      <publishTime>10/01/2013 16:16:00</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/ExtendedImageProperties.xaml.xml">
       <publishTime>10/17/2013 20:01:40</publishTime>
@@ -144,7 +144,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/07/2013 14:55:14</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/imageproperties.js">
-      <publishTime>10/17/2013 20:06:02</publishTime>
+      <publishTime>12/16/2013 14:11:29</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/jquery.min.js">
       <publishTime>10/07/2013 14:56:28</publishTime>

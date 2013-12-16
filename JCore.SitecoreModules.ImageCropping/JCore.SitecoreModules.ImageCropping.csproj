@@ -122,10 +122,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Sitecore.Client">
-      <HintPath>..\..\Weil.SC-APS\Binaries\Sitecore.Client.dll</HintPath>
+      <HintPath>..\..\..\Downloads\Sitecore7\Sitecore 7.0 rev. 130918\Sitecore 7.0 rev. 130918\Website\bin\Sitecore.Client.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
-      <HintPath>..\..\..\Trunk\Weil.SC\Binaries\Sitecore.Kernel.dll</HintPath>
+      <HintPath>..\..\..\Downloads\Sitecore7\Sitecore 7.0 rev. 130918\Sitecore 7.0 rev. 130918\Website\bin\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
