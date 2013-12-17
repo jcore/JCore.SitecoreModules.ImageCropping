@@ -289,7 +289,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         private int ConvertToInt(string value)
         {
             var intValue = 0;
-            if (int.TryParse(value, out intValue))
+            if (!int.TryParse(value, out intValue))
             {
                 intValue = 0;
             }

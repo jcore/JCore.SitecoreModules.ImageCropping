@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Sitecore.Configuration;
+using Sitecore.Data.Fields;
 using Sitecore.Resources.Media;
+using Sitecore.Shell.Applications.ContentEditor;
+using Sitecore.Web;
 
 namespace JCore.SitecoreModules.ImageCropping.Resources.Media
 {
@@ -66,12 +70,69 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// Gets the media URL.
         /// </summary>
         /// <param name="mediaItem">The media item.</param>
-        /// <param name="thumbnailOptions">The thumbnail options.</param>
+        /// <param name="options">The thumbnail options.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
         internal static string GetMediaUrl(global::Sitecore.Data.Items.MediaItem mediaItem, CustomMediaUrlOptions options)
         {
             return CustomMediaManager.Provider.GetMediaUrl(mediaItem, options);
         }
+
+        /// <summary>
+        /// Gets the media URL.
+        /// </summary>
+        /// <param name="mediaItem">The media item.</param>
+        /// <returns></returns>
+        public static string GetMediaUrl(ImageField imageField)
+        {
+            if (imageField == null)
+                return string.Empty;
+            var mediaItem = imageField.MediaItem;
+            if (mediaItem == null)
+                return string.Empty;
+
+            CustomMediaUrlOptions originalUrlOptions = CustomMediaUrlOptions.GetMediaOptions(mediaItem);
+            var options = CustomMediaUrlOptions.GetShellOptions();
+
+            var height = 0;
+            if (int.TryParse(imageField.Height, out height))
+            {
+                options.Height = height;
+            }
+
+            var width = 0;
+            if (int.TryParse(imageField.Width, out width))
+            {
+                options.Width = width;
+            }
+            options.Language = mediaItem.Language;
+            options.UseDefaultIcon = true;
+
+            return CustomMediaManager.GetMediaUrl(imageField, options);
+        }
+
+        /// <summary>
+        /// Gets the media URL.
+        /// </summary>
+        /// <param name="imageField">The image field.</param>
+        /// <param name="options">The options.</param>
+        /// <returns></returns>
+        public static string GetMediaUrl(ImageField imageField, CustomMediaUrlOptions options)
+        {
+            if (imageField == null)
+                return string.Empty;
+            var mediaItem = imageField.MediaItem;
+            if (mediaItem == null)
+                return string.Empty;
+            
+            string cropRegion = WebUtil.HtmlEncode(new XmlValue(imageField.Value, "image").GetAttribute("cropregion"));
+            if (!string.IsNullOrEmpty(cropRegion))
+            {
+                options.CropRegion = cropRegion;
+            }
+
+            return CustomMediaManager.GetMediaUrl(mediaItem, options);
+        }
+    
     }
 }

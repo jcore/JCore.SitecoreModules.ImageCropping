@@ -6,10 +6,11 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\siteroot\autohaus</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Config/Include/Sitecore.SharedModules.ImageCropping.config">
-      <publishTime>10/17/2013 20:08:29</publishTime>
+      <publishTime>12/17/2013 13:06:24</publishTime>
     </File>
     <File Include="bin/ComponentArt.Web.UI.dll">
       <publishTime>10/01/2013 16:15:56</publishTime>
@@ -21,16 +22,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/01/2013 16:15:56</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.dll">
-      <publishTime>12/16/2013 12:29:53</publishTime>
+      <publishTime>12/17/2013 13:20:44</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.pdb">
-      <publishTime>12/16/2013 12:29:53</publishTime>
+      <publishTime>12/17/2013 13:20:44</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.dll">
-      <publishTime>12/16/2013 12:29:54</publishTime>
+      <publishTime>12/17/2013 13:20:44</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.pdb">
-      <publishTime>12/16/2013 12:29:54</publishTime>
+      <publishTime>12/17/2013 13:20:44</publishTime>
     </File>
     <File Include="bin/Lucene.Net.dll">
       <publishTime>10/01/2013 16:15:57</publishTime>
