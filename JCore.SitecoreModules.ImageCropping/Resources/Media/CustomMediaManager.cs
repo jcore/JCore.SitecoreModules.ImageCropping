@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Sitecore.Configuration;
 using Sitecore.Data.Fields;
+using Sitecore.Diagnostics;
 using Sitecore.Resources.Media;
 using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Web;
@@ -105,6 +106,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             {
                 options.Width = width;
             }
+
             options.Language = mediaItem.Language;
             options.UseDefaultIcon = true;
 
@@ -128,10 +130,41 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             string cropRegion = WebUtil.HtmlEncode(new XmlValue(imageField.Value, "image").GetAttribute("cropregion"));
             if (!string.IsNullOrEmpty(cropRegion))
             {
-                options.CropRegion = cropRegion;
+                try
+                {
+                    options.CropRegion = cropRegion;
+                    var coordinates = ConvertToIntArray(cropRegion);
+                    if (options.Width + options.Height > (coordinates[2] - coordinates[0] + coordinates[3] + coordinates[1]))
+                    {
+                        options.Width = coordinates[2] - coordinates[0];
+                        options.Height = coordinates[3] + coordinates[1];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message, ex, typeof(CustomMediaManager));
+                }
             }
 
             return CustomMediaManager.GetMediaUrl(mediaItem, options);
+        }
+
+        /// <summary>
+        /// Converts to int array.
+        /// </summary>
+        /// <param name="cropRegion">The crop region.</param>
+        /// <returns></returns>
+        public static int[] ConvertToIntArray(string cropRegion)
+        {
+            try
+            {
+                return cropRegion.Split(',').Select(c => int.Parse(c)).ToArray();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex, typeof(CustomMediaManager));
+            }
+            return new int[4];
         }
     
     }

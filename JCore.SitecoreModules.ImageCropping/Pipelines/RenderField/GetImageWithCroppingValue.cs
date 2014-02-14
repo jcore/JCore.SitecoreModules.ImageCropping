@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JCore.SitecoreModules.ImageCropping.Resources.Media;
 using Sitecore.Collections;
+using Sitecore.Diagnostics;
 using Sitecore.Pipelines.RenderField;
+using Sitecore.Shell.Applications.ContentEditor;
+using Sitecore.Web;
 using Sitecore.Xml.Xsl;
 
 namespace JCore.SitecoreModules.ImageCropping.Pipelines.RenderField
@@ -27,8 +31,35 @@ namespace JCore.SitecoreModules.ImageCropping.Pipelines.RenderField
             ImageRenderer renderer = this.CreateRenderer();
             renderer.Item = args.Item;
             renderer.FieldName = args.FieldName;
-            renderer.FieldValue = args.FieldValue;
+
+            XmlValue xmlValue = new XmlValue(args.FieldValue, "image");
+            string width = xmlValue.GetAttribute("width");
+            string height = xmlValue.GetAttribute("height");
+            if (string.IsNullOrWhiteSpace(width) || string.IsNullOrWhiteSpace(height))
+            {
+                string cropRegion = xmlValue.GetAttribute("cropregion");
+                try
+                {
+                    var coordinates = CustomMediaManager.ConvertToIntArray(cropRegion);
+                    if ((coordinates[2] - coordinates[0] + coordinates[3] + coordinates[1]) > 0)
+                    {
+                        xmlValue.SetAttribute("width", (coordinates[2] - coordinates[0]).ToString());
+                        xmlValue.SetAttribute("height", (coordinates[3] - coordinates[1]).ToString());
+                        renderer.FieldValue = xmlValue.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message, ex, this);
+                }
+            }
+            if (renderer.FieldValue == null)
+            {
+                renderer.FieldValue = args.FieldValue;
+            }
+            
             renderer.Parameters = args.Parameters;
+
             args.WebEditParameters.AddRange((SafeDictionary<string, string>)args.Parameters);
             RenderFieldResult renderFieldResult = renderer.Render();
             args.Result.FirstPart = renderFieldResult.FirstPart;
