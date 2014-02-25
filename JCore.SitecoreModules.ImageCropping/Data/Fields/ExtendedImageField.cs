@@ -31,6 +31,10 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
     /// </summary>
     public class ExtendedImageField : Image
     {
+        public ExtendedImageField(Field field)
+        {
+            // need to research why this method is required.
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Sitecore.Shell.Applications.ContentEditor.Image"/> class.
         /// 
