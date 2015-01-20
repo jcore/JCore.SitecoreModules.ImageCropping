@@ -139,7 +139,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Fields\ExtendedImageField.cs" />
+    <Compile Include="Data\Fields\ImageWithCropping.cs" />
     <Compile Include="ImageWithCropRenderer.cs" />
     <Compile Include="Pipelines\RenderField\GetImageWithCroppingValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
