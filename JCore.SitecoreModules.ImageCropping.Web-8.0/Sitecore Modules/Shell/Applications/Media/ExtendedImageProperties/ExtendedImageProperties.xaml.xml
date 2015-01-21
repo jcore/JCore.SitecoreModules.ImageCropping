@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<xamlControls
+  xmlns:x="http://www.sitecore.net/xaml"
+  xmlns:ajax="http://www.sitecore.net/ajax"
+  xmlns:rest="http://www.sitecore.net/rest"
+  xmlns:javascript="http://www.sitecore.net/javascript"
+  xmlns:r="http://www.sitecore.net/renderings"
+  xmlns:xmlcontrol="http://www.sitecore.net/xmlcontrols"
+  xmlns:p="http://schemas.sitecore.net/Visual-Studio-Intellisense"
+  xmlns:asp="http://www.sitecore.net/microsoft/webcontrols"
+  xmlns:html="http://www.sitecore.net/microsoft/htmlcontrols"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <Sitecore.Shell.Applications.Media.ExtendedImageProperties x:inherits="JCore.SitecoreModules.ImageCropping.Shell.Applications.Media.ExtendedImagePropertiesPage,JCore.SitecoreModules.ImageCropping">
+    <Sitecore.Controls.DialogPage Header="Image Properties" Icon="Applications/32x32/photo_scenery.png" Text="Set the properties for the image here." runat="server">
+
+      <AjaxScriptManager runat="server"/>
+      <ContinuationManager runat="server" />
+      
+      <Script runat="server" type="text/javascript" language="javascript"  x:placeholder="Scripts" Src="/sitecore modules/shell/applications/media/ExtendedImageProperties/scripts/jquery.min.js" />
+      <Script runat="server" type="text/javascript" language="javascript"  x:placeholder="Scripts" Src="/sitecore modules/shell/applications/media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.min.js" />
+      <Script runat="server" type="text/javascript" language="javascript"  x:placeholder="Scripts" Src="/sitecore modules/shell/applications/media/ExtendedImageProperties/scripts/imageproperties.js" />
+
+      <GridPanel Height="100%" Width="100%" runat="server">
+        <Border runat="server" GridPanel.VAlign="top">
+          <fieldset>
+            <legend>
+              <Literal Text="Image Cropping" runat="server"/>
+            </legend>
+
+            <GridPanel Class="scFormTable" Cellpadding="2" Width="100%" runat="server">
+              <Border runat="server" GridPanel.VAlign="top" Style="display:block;position:relative" class="cropImageParent">
+                <asp:Image runat="server" ID="Img" Height="300"></asp:Image>                
+              </Border>
+              <button type="button" id="clear" class="scButton">Clear Region</button>
+            </GridPanel>
+          </fieldset>
+          <fieldset>
+            <legend>
+              <Literal Text="Cropping Region Options" runat="server"/>
+            </legend>
+            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2" Width="100%" runat="server">
+              <input type="radio" name="cropregionstyle" id="free" checked="true">Free </input>
+              <input type="radio" name="cropregionstyle" id="square">Square </input>
+            </GridPanel>
+          </fieldset>
+          <fieldset>
+            <legend>
+              <Literal Text="Cropping Region Coordinates" runat="server"/>
+            </legend>
+            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2"  runat="server">
+                <Literal Text="X1:" runat="server"/>
+                <asp:TextBox ID="X1" runat="server"  coordinate="x1"/>
+
+                <Literal Text="X2:" runat="server"/>
+                <asp:TextBox ID="X2" runat="server" coordinate="x2"/>
+
+                <Literal Text="Y1:" runat="server"/>
+                <asp:TextBox ID="Y1" runat="server" coordinate="y1"/>
+
+                <Literal Text="Y2:" runat="server"/>
+                <asp:TextBox ID="Y2" runat="server"  coordinate="y2"/>
+              </GridPanel>
+
+          </fieldset>
+              
+          <fieldset>
+            <legend>
+              <Literal Text="Image Dimensions" runat="server"/>
+            </legend>
+
+            <div style="padding:6px 0px 12px 4px">
+              <Literal Text="Enter the dimensions of the image if they are different than the dimensions of the original. This will only affect the reference and not the original image." runat="server"/>
+            </div>
+
+            <Border ID="SizeWarning" Class="scWizardWarning" Padding="8px 0px 8px 0px" runat="server">
+              <ThemedImage Src="Applications/16x16/warning.png" Margin="0px 4px 0px 0px" Align="absmiddle" runat="server"/>
+              <Literal Text="The image is too big to be resized." runat="server"/>
+            </Border>
+
+            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2" runat="server">
+              <Literal Text="Width:" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              <asp:TextBox ID="WidthEdit" ajax:Change="ChangeWidth" runat="server"/>
+
+              <Literal Text="Height:" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              <asp:TextBox ID="HeightEdit" ajax:Change="ChangeHeight" runat="server"/>
+              
+              <Border runat="server"/>
+              <Border  runat="server">
+                <Checkbox ID="Aspect" runat="server"/>
+                <Literal Text="Keep Aspect Ratio" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              </Border>
+
+              <Border runat="server"/>
+              <Border Padding="4px 0px 0px 0px" runat="server">
+                <Literal ID="CroppedSize" runat="server" />
+              </Border>
+              <Border runat="server"/>
+              <Border Padding="4px 0px 0px 0px" runat="server">
+                <Literal ID="OriginalSize" runat="server" />
+              </Border>
+              <asp:HiddenField runat="server" ID="OriginalWidth"></asp:HiddenField>
+              <asp:HiddenField runat="server" ID="OriginalHeight"></asp:HiddenField>
+            </GridPanel>
+          </fieldset>            
+
+          <fieldset>
+            <legend>
+              <Literal Text="Text" runat="server"/>
+            </legend>
+
+            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2" Width="100%" runat="server">
+              <Literal Text="Alternate Text:" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              <asp:TextBox ID="Alt" GridPanel.Width="100%" Style="width:100%" runat="server"/>
+
+              <Literal Text="Default Alternate Text:" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              <asp:TextBox ID="OriginalText" GridPanel.Width="100%" Width="100%" Style="background:transparent;border:none;box-shadow: none; padding-left: 0;" ReadOnly="true" runat="server"/>
+            </GridPanel>
+          </fieldset>
+
+          
+
+          <fieldset>
+            <legend>
+              <Literal Text="Space" runat="server"/>
+            </legend>
+
+            <div style="padding:6px 0px 12px 4px">
+              <Literal Text="Please provide the desired space to place around the image." runat="server" />
+            </div>
+
+            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2" runat="server">
+              <Literal Text="Horizontal Space:" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              <asp:TextBox ID="HSpace" runat="server"/>
+
+              <Literal Text="Vertical Space:" GridPanel.NoWrap="true" GridPanel.Align="right" runat="server"/>
+              <asp:TextBox ID="VSpace" runat="server"/>
+            </GridPanel>
+          </fieldset>
+        </Border>
+      </GridPanel>
+
+    </Sitecore.Controls.DialogPage>
+  </Sitecore.Shell.Applications.Media.ExtendedImageProperties>
+
+
+</xamlControls>

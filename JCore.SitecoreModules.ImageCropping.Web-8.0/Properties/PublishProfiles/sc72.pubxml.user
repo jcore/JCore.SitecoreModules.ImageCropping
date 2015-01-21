@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\inetpub\wwwroot\sc72rev141226\Website</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="App_Config/Include/Sitecore.SharedModules.ImageCropping.config">
+      <publishTime>01/20/2015 17:12:53</publishTime>
+    </File>
+    <File Include="bin/ComponentArt.Web.UI.dll">
+      <publishTime>01/20/2015 17:33:07</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.dll">
+      <publishTime>12/26/2014 01:28:46</publishTime>
+    </File>
+    <File Include="bin/ITHit.WebDAV.Server.dll">
+      <publishTime>01/20/2015 17:33:09</publishTime>
+    </File>
+    <File Include="bin/JCore.SitecoreModules.ImageCropping.dll">
+      <publishTime>01/20/2015 17:56:24</publishTime>
+    </File>
+    <File Include="bin/JCore.SitecoreModules.ImageCropping.pdb">
+      <publishTime>01/20/2015 17:56:23</publishTime>
+    </File>
+    <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.dll">
+      <publishTime>01/20/2015 17:56:30</publishTime>
+    </File>
+    <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.pdb">
+      <publishTime>01/20/2015 17:56:30</publishTime>
+    </File>
+    <File Include="bin/Lucene.Net.dll">
+      <publishTime>01/20/2015 17:33:12</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>01/20/2015 13:43:12</publishTime>
+    </File>
+    <File Include="bin/Mvp.Xml.dll">
+      <publishTime>01/20/2015 17:33:13</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>01/20/2015 17:33:14</publishTime>
+    </File>
+    <File Include="bin/RadEditor.Net2.dll">
+      <publishTime>01/20/2015 17:33:14</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Analytics.dll">
+      <publishTime>01/20/2015 17:33:15</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Client.dll">
+      <publishTime>12/26/2014 01:29:02</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Kernel.dll">
+      <publishTime>01/20/2015 17:33:19</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Logging.dll">
+      <publishTime>01/20/2015 17:33:20</publishTime>
+    </File>
+    <File Include="bin/Sitecore.NVelocity.dll">
+      <publishTime>01/20/2015 17:33:23</publishTime>
+    </File>
+    <File Include="bin/Sitecore.Zip.dll">
+      <publishTime>01/20/2015 17:33:27</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Base.dll">
+      <publishTime>01/20/2015 17:33:27</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Report.dll">
+      <publishTime>01/20/2015 17:33:28</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Report.Web.dll">
+      <publishTime>01/20/2015 17:33:29</publishTime>
+    </File>
+    <File Include="bin/Stimulsoft.Report.WebDesign.dll">
+      <publishTime>01/20/2015 17:33:29</publishTime>
+    </File>
+    <File Include="bin/Telerik.Web.UI.dll">
+      <publishTime>01/20/2015 17:33:32</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/ExtendedImageProperties.xaml.xml">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-anim-h.gif">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-anim-v.gif">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-h.gif">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-v.gif">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/imgareaselect-animated.css">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/imgareaselect-default.css">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/imgareaselect-deprecated.css">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/GPL-LICENSE.txt">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.js">
+      <publishTime>01/20/2015 17:56:51</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.min.js">
+      <publishTime>01/20/2015 17:56:51</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/MIT-LICENSE.txt">
+      <publishTime>01/19/2015 10:25:50</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/imageproperties.js">
+      <publishTime>01/20/2015 17:56:51</publishTime>
+    </File>
+    <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/jquery.min.js">
+      <publishTime>01/20/2015 17:56:51</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
