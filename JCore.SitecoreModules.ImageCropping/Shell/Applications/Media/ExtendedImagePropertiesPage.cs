@@ -226,7 +226,14 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
                     {
                         var croppedWidth = Math.Round((decimal)(int.Parse(this.X2.Text) - int.Parse(this.X1.Text)));
                         var croppedHeight = Math.Round((decimal)(int.Parse(this.Y2.Text) - int.Parse(this.Y1.Text)));
-                        this.HeightEdit.Text = ((int)(croppedHeight * num / croppedWidth)).ToString();
+                        if (croppedHeight > 0 && croppedWidth > 0)
+                        {
+                            this.HeightEdit.Text = ((int)(croppedHeight * num / croppedWidth)).ToString();
+                        }
+                        else
+                        {
+                            this.HeightEdit.Text = string.Empty;
+                        }
                     }
                     else
                     {

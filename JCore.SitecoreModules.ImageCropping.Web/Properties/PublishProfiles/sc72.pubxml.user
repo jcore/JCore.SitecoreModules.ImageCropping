@@ -6,92 +6,83 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>http://localhost:63908/</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\inetpub\wwwroot\sc72rev141226\Website</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Config/Include/Sitecore.SharedModules.ImageCropping.config">
       <publishTime>01/20/2015 17:12:53</publishTime>
     </File>
     <File Include="bin/ComponentArt.Web.UI.dll">
-      <publishTime>12/12/2014 16:42:04</publishTime>
+      <publishTime>01/20/2015 17:33:07</publishTime>
     </File>
     <File Include="bin/HtmlAgilityPack.dll">
-      <publishTime>12/12/2014 16:45:42</publishTime>
+      <publishTime>12/26/2014 01:28:46</publishTime>
     </File>
     <File Include="bin/ITHit.WebDAV.Server.dll">
-      <publishTime>12/12/2014 16:45:42</publishTime>
+      <publishTime>01/20/2015 17:33:09</publishTime>
     </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.dll">
       <publishTime>01/21/2015 08:47:33</publishTime>
     </File>
+    <File Include="bin/JCore.SitecoreModules.ImageCropping.pdb">
+      <publishTime>01/20/2015 17:56:23</publishTime>
+    </File>
     <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.dll">
-      <publishTime>01/21/2015 08:47:50</publishTime>
+      <publishTime>01/21/2015 11:00:13</publishTime>
+    </File>
+    <File Include="bin/JCore.SitecoreModules.ImageCropping.Web.pdb">
+      <publishTime>01/20/2015 17:56:30</publishTime>
     </File>
     <File Include="bin/Lucene.Net.dll">
-      <publishTime>12/12/2014 16:45:50</publishTime>
+      <publishTime>01/20/2015 17:33:12</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>01/20/2015 13:43:12</publishTime>
     </File>
     <File Include="bin/Mvp.Xml.dll">
-      <publishTime>12/12/2014 16:45:54</publishTime>
+      <publishTime>01/20/2015 17:33:13</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
-      <publishTime>12/12/2014 16:45:54</publishTime>
+      <publishTime>01/20/2015 17:33:14</publishTime>
     </File>
     <File Include="bin/RadEditor.Net2.dll">
-      <publishTime>12/12/2014 16:45:56</publishTime>
-    </File>
-    <File Include="bin/Sitecore.Analytics.Aggregation.dll">
-      <publishTime>12/12/2014 16:45:58</publishTime>
-    </File>
-    <File Include="bin/Sitecore.Analytics.Core.dll">
-      <publishTime>12/12/2014 16:46:00</publishTime>
-    </File>
-    <File Include="bin/Sitecore.Analytics.DataAccess.dll">
-      <publishTime>12/12/2014 16:46:02</publishTime>
+      <publishTime>01/20/2015 17:33:14</publishTime>
     </File>
     <File Include="bin/Sitecore.Analytics.dll">
-      <publishTime>12/12/2014 16:46:02</publishTime>
-    </File>
-    <File Include="bin/Sitecore.Analytics.Model.dll">
-      <publishTime>12/12/2014 16:46:04</publishTime>
-    </File>
-    <File Include="bin/Sitecore.Analytics.Processing.dll">
-      <publishTime>12/12/2014 16:46:08</publishTime>
+      <publishTime>01/20/2015 17:33:15</publishTime>
     </File>
     <File Include="bin/Sitecore.Client.dll">
-      <publishTime>12/12/2014 16:46:14</publishTime>
+      <publishTime>12/26/2014 01:29:02</publishTime>
     </File>
     <File Include="bin/Sitecore.Kernel.dll">
-      <publishTime>12/12/2014 16:46:32</publishTime>
+      <publishTime>01/20/2015 17:33:19</publishTime>
     </File>
     <File Include="bin/Sitecore.Logging.dll">
-      <publishTime>12/12/2014 16:46:38</publishTime>
+      <publishTime>01/20/2015 17:33:20</publishTime>
     </File>
     <File Include="bin/Sitecore.NVelocity.dll">
-      <publishTime>12/12/2014 16:46:44</publishTime>
+      <publishTime>01/20/2015 17:33:23</publishTime>
     </File>
     <File Include="bin/Sitecore.Zip.dll">
-      <publishTime>12/12/2014 16:47:18</publishTime>
+      <publishTime>01/20/2015 17:33:27</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Base.dll">
-      <publishTime>12/12/2014 16:47:18</publishTime>
+      <publishTime>01/20/2015 17:33:27</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Report.dll">
-      <publishTime>12/12/2014 16:47:20</publishTime>
+      <publishTime>01/20/2015 17:33:28</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Report.Web.dll">
-      <publishTime>12/12/2014 16:47:20</publishTime>
+      <publishTime>01/20/2015 17:33:29</publishTime>
     </File>
     <File Include="bin/Stimulsoft.Report.WebDesign.dll">
-      <publishTime>12/12/2014 16:47:20</publishTime>
+      <publishTime>01/20/2015 17:33:29</publishTime>
     </File>
     <File Include="bin/Telerik.Web.UI.dll">
-      <publishTime>12/12/2014 16:47:30</publishTime>
+      <publishTime>01/20/2015 17:33:32</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/ExtendedImageProperties.xaml.xml">
-      <publishTime>01/21/2015 09:03:18</publishTime>
+      <publishTime>01/19/2015 10:25:50</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/css/border-anim-h.gif">
       <publishTime>01/19/2015 10:25:50</publishTime>
@@ -118,19 +109,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/19/2015 10:25:50</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.js">
-      <publishTime>01/21/2015 08:45:54</publishTime>
+      <publishTime>01/21/2015 11:00:21</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/jquery.imgareaselect.min.js">
-      <publishTime>01/21/2015 08:45:54</publishTime>
+      <publishTime>01/21/2015 11:00:21</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/imagereaselect/MIT-LICENSE.txt">
       <publishTime>01/19/2015 10:25:50</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/imageproperties.js">
-      <publishTime>01/21/2015 08:45:54</publishTime>
+      <publishTime>01/21/2015 11:00:21</publishTime>
     </File>
     <File Include="Sitecore Modules/Shell/Applications/Media/ExtendedImageProperties/scripts/jquery.min.js">
-      <publishTime>01/21/2015 08:45:54</publishTime>
+      <publishTime>01/21/2015 11:00:21</publishTime>
     </File>
   </ItemGroup>
 </Project>
