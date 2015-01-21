@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCore.SitecoreModules.ImageCropping.Web", "JCore.SitecoreModules.ImageCropping.Web\JCore.SitecoreModules.ImageCropping.Web.csproj", "{F1BBEC33-2BD3-49DB-A778-6B37BCAF592E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JCore.SitecoreModules.ImageCropping", "JCore.SitecoreModules.ImageCropping\JCore.SitecoreModules.ImageCropping.csproj", "{646862EA-9709-4C37-AB92-07FEC64AA865}"
