@@ -97,6 +97,7 @@
     <None Include="Properties\PublishProfiles\sc75 Release.pubxml" />
     <None Include="Properties\PublishProfiles\sc75.pubxml" />
     <None Include="Properties\PublishProfiles\sc80.pubxml" />
+    <None Include="Properties\PublishProfiles\sc80rev150121.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JCore.SitecoreModules.ImageCropping\JCore.SitecoreModules.ImageCropping.csproj">

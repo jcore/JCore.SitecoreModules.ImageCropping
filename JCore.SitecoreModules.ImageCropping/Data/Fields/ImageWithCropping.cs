@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
-using Sitecore.Data;
-using Sitecore.Data.Fields;
+using JCore.SitecoreModules.ImageCropping.Models;
+using JCore.SitecoreModules.ImageCropping.Resources.Media;
+using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
-using Sitecore.Exceptions;
 using Sitecore.Globalization;
-using Sitecore.Links;
 using Sitecore.Resources;
 using Sitecore.Resources.Media;
-using JCore.SitecoreModules.ImageCropping.Resources.Media;
 using Sitecore.Shell.Applications.ContentEditor;
 using Sitecore.Shell.Applications.Dialogs.MediaBrowser;
-using Sitecore.Shell.Framework;
-using Sitecore.Shell.Framework.Commands;
 using Sitecore.Text;
 using Sitecore.Web;
 using Sitecore.Web.UI.Sheer;
-using Sitecore;
+using Sitecore.Exceptions;
 
 namespace JCore.SitecoreModules.ImageCropping.Data.Fields
 {
@@ -163,6 +159,169 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             SheerResponse.Eval("scContent.startValidators()");
         }
 
+        protected new void Browse()
+        {
+            if (this.Disabled)
+                return;
+            Sitecore.Context.ClientPage.Start(this, "BrowseImage");
+        }
+
+
+        /// <summary>
+        /// Browses for an image.
+        /// 
+        /// </summary>
+        /// <param name="args">The args.</param><exception cref="T:Sitecore.Exceptions.ClientAlertException">The source of this Image field points to an item that does not exist.</exception>
+        protected new void BrowseImage(ClientPipelineArgs args)
+        {
+            Assert.ArgumentNotNull(args, "args");
+            if (args.IsPostBack)
+            {
+                if (string.IsNullOrEmpty(args.Result) || args.Result == "undefined")
+                    return;
+                MediaItem mediaItem = Client.ContentDatabase.Items[args.Result];
+                if (mediaItem != null)
+                {
+                    TemplateItem template = mediaItem.InnerItem.Template;
+                    if (template != null && !IsImageMedia(template))
+                    {
+                        SheerResponse.Alert("The selected item does not contain an image.");
+                    }
+                    else
+                    {
+                        this.XmlValue.SetAttribute("mediaid", mediaItem.ID.ToString());
+                        var croppingOption = GetCroppingOption();
+                        var cropRegion = ProduceCropRegionXmlAttributeValueFromAnOption(mediaItem, croppingOption);
+                        if (!string.IsNullOrWhiteSpace(cropRegion))
+                        {
+                            this.XmlValue.SetAttribute("cropregion", cropRegion);
+                        }
+                        this.XmlValue.SetAttribute("width", croppingOption.Width.ToString());
+                        this.XmlValue.SetAttribute("height", croppingOption.Height.ToString());
+                        this.Value = mediaItem.MediaPath;
+                        this.Update();
+                        this.SetModified();
+                    }
+                }
+                else
+                    SheerResponse.Alert("Item not found.");
+            }
+            else
+            {
+                var souceValues = HttpUtility.ParseQueryString(Source);
+                var mediaSource = string.Empty;
+                if (souceValues.AllKeys.Any())
+                {
+                    mediaSource = souceValues["mediaSource"];
+                }
+                string str1 = StringUtil.GetString(new string[2]
+                {
+                  mediaSource,
+                  "/sitecore/media library"
+                });
+                string str2 = str1;
+                string path = this.XmlValue.GetAttribute("mediaid");
+                string str3 = path;
+                if (str1.StartsWith("~", StringComparison.InvariantCulture))
+                {
+                    str2 = StringUtil.Mid(str1, 1);
+                    if (string.IsNullOrEmpty(path))
+                        path = str2;
+                    str1 = "/sitecore/media library";
+                }
+                Language language = Language.Parse(this.ItemLanguage);
+                MediaBrowserOptions mediaBrowserOptions = new MediaBrowserOptions();
+                Item obj1 = Client.ContentDatabase.GetItem(str1, language);
+                if (obj1 == null)
+                    throw new ClientAlertException("The source of this Image field points to an item that does not exist.");
+                mediaBrowserOptions.Root = obj1;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    Item obj2 = Client.ContentDatabase.GetItem(path, language);
+                    if (obj2 != null)
+                        mediaBrowserOptions.SelectedItem = obj2;
+                }
+                UrlHandle urlHandle = new UrlHandle();
+                urlHandle["ro"] = str1;
+                urlHandle["fo"] = str2;
+                urlHandle["db"] = Client.ContentDatabase.Name;
+                urlHandle["la"] = this.ItemLanguage;
+                urlHandle["va"] = str3;
+                UrlString urlString = mediaBrowserOptions.ToUrlString();
+                urlHandle.Add(urlString);
+                SheerResponse.ShowModalDialog(urlString.ToString(), "1200px", "700px", string.Empty, true);
+                args.WaitForPostBack();
+            }
+        }
+
+        private string ProduceCropRegionXmlAttributeValueFromAnOption(MediaItem mediaItem, CroppingOption croppingOption)
+        {
+            Assert.ArgumentNotNull(mediaItem, "mediaItem");
+            Assert.ArgumentNotNull(croppingOption, "croppingOption");
+
+            if (croppingOption.CroppingRegionHorizontalAlignment == HorizonatalAlignment.Undefined ||
+                croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Undefined)
+            {
+                return string.Empty;
+            }
+
+            var originalWidth = Int32.Parse(mediaItem.InnerItem["Width"]);
+            var originalHeight = Int32.Parse(mediaItem.InnerItem["Height"]);
+
+            int x1 = 0;
+            int x2 = originalWidth;
+
+            // x1 and x2 coordinates
+            if (croppingOption.CroppingRegionHorizontalAlignment == HorizonatalAlignment.Center &&
+                originalWidth > croppingOption.Width)
+            {
+                x1 = (originalWidth - croppingOption.Width)/2;
+            }
+            else if (croppingOption.CroppingRegionHorizontalAlignment == HorizonatalAlignment.Right &&
+                     originalWidth > croppingOption.Width)
+            {
+                x1 = (originalWidth - croppingOption.Width);
+            }
+            x2 = croppingOption.Width + x1;
+
+            int y1 = 0;
+            int y2 = originalHeight;
+            if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Medium &&
+                originalHeight > croppingOption.Height)
+            {
+                y1 = (originalHeight - croppingOption.Height) / 2;
+            }
+            else if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Bottom &&
+                originalHeight > croppingOption.Height)
+            {
+                y1 = originalHeight - croppingOption.Height;
+            }
+            y2 = croppingOption.Height + y1;
+
+            if (x1 == 0 && x2 == originalWidth && y1 == 0 && y2 == originalHeight)
+            {
+                return string.Empty;
+            }
+            return string.Join(",", new[] { x1, y1, x2, y2 });
+        }
+
+
+        public virtual string CroppingOption
+        {
+            get
+            {
+                return GetViewStateString("CroppingOption");
+            }
+            set
+            {
+                Assert.ArgumentNotNull(value, "value");
+                string str = MainUtil.UnmapPath(value);
+                if (str.EndsWith("/", StringComparison.InvariantCulture))
+                    str = str.Substring(0, str.Length - 1);
+                SetViewStateString("CroppingOption", str);
+            }
+        }
+
         /// <summary>
         /// Clears the image.
         /// 
@@ -217,6 +376,12 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         private string GetDetails()
         {
             string str1 = string.Empty;
+            var croppingOption = GetCroppingOption();
+            var croppingOptionString = string.Empty;
+            if (croppingOption != null)
+            {
+                croppingOptionString = String.Format("<div>Default Cropping: {0} - {1}x{2}</div>", croppingOption.Name, croppingOption.Width, croppingOption.Height);
+            }
             MediaItem mediaItem = (MediaItem)this.GetMediaItem();
             if (mediaItem != null)
             {
@@ -236,8 +401,8 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
 
                     if (string.IsNullOrEmpty(str3) || string.IsNullOrEmpty(str4))
                     {
-                        str3 = croppedWidth.ToString();
-                        str4 = croppedHeight.ToString();
+                        str3 = croppedWidth.ToString(CultureInfo.InvariantCulture);
+                        str4 = croppedHeight.ToString(CultureInfo.InvariantCulture);
                     }
                     stringBuilder.Append(Translate.Text("Dimensions: {0} x {1} (Cropped. Original: {2})", (object)str3, (object)str4, (object)str2));
                 }
@@ -274,11 +439,85 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 else
                     stringBuilder.Append(Translate.Text("Warning: Alternate Text is missing."));
                 stringBuilder.Append("</div>");
+
+                if (!string.IsNullOrWhiteSpace(croppingOptionString))
+                {
+                    stringBuilder.Append(croppingOptionString);
+                }
                 str1 = ((object)stringBuilder).ToString();
             }
+
             if (str1.Length == 0)
+            {
                 str1 = Translate.Text("This media item has no details.");
+                if (!string.IsNullOrWhiteSpace(croppingOptionString))
+                {
+                    str1 += croppingOptionString;
+                }
+            }
             return str1;
+        }
+
+        private CroppingOption GetCroppingOption()
+        {
+            if (!string.IsNullOrWhiteSpace(Source))
+            {
+                var values = HttpUtility.ParseQueryString(Source);
+                if (values.HasKeys())
+                {
+                    var croppingOptionSource = values["CroppingOption"];
+                    if (!string.IsNullOrWhiteSpace(croppingOptionSource))
+                    {
+                        Language language = Language.Parse(ItemLanguage);
+                        Item croppingOptionItem = Client.ContentDatabase.GetItem(croppingOptionSource, language);
+                        if (croppingOptionItem != null)
+                        {
+                            return new CroppingOption
+                            {
+                                Name = croppingOptionItem.DisplayName,
+                                Width = Int32.Parse(croppingOptionItem.Fields["Width"].Value),
+                                Height = Int32.Parse(croppingOptionItem.Fields["Height"].Value),
+                                CroppingRegionHorizontalAlignment = GetCroppingRegionHorizontalAlignment(croppingOptionItem),
+                                CroppingRegionVerticalAlignment = GetCroppingRegionVerticalAlignment(croppingOptionItem)
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private static VerticalAlignment GetCroppingRegionVerticalAlignment(Item croppingOptionItem)
+        {
+            if (croppingOptionItem != null &&
+                !string.IsNullOrWhiteSpace(croppingOptionItem["Cropping Region Vertical Alignment"]))
+            {
+                {
+                    return
+                        (VerticalAlignment)
+                            Enum.Parse(typeof (VerticalAlignment),
+                                croppingOptionItem.Fields["Cropping Region Vertical Alignment"].Value);
+                }
+            }
+            return VerticalAlignment.Undefined;
+        }
+
+        /// <summary>
+        /// Gets the cropping region horizontal alignment.
+        /// </summary>
+        /// <param name="croppingOptionItem">The cropping option item.</param>
+        /// <returns></returns>
+        private static HorizonatalAlignment GetCroppingRegionHorizontalAlignment(Item croppingOptionItem)
+        {
+            if (croppingOptionItem != null &&
+                !string.IsNullOrWhiteSpace(croppingOptionItem["Cropping Region Horizontal Alignment"]))
+            {
+                return
+                    (HorizonatalAlignment)
+                        Enum.Parse(typeof (HorizonatalAlignment),
+                            croppingOptionItem.Fields["Cropping Region Horizontal Alignment"].Value);
+            }
+            return  HorizonatalAlignment.Undefined;
         }
 
         /// <summary>
@@ -304,11 +543,19 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// </returns>
         private Item GetMediaItem()
         {
-            string attribute = this.XmlValue.GetAttribute("mediaid");
+            string attribute = XmlValue.GetAttribute("mediaid");
             if (attribute.Length <= 0)
-                return (Item)null;
-            Language language = Language.Parse(this.ItemLanguage);
+                return null;
+            Language language = Language.Parse(ItemLanguage);
             return Client.ContentDatabase.GetItem(attribute, language);
+        }
+
+        private bool IsImageMedia(TemplateItem template)
+        {
+            Assert.ArgumentNotNull(template, "template");
+            if (template.ID == TemplateIDs.VersionedImage || template.ID == TemplateIDs.UnversionedImage)
+                return true;
+            return template.BaseTemplates.Any(IsImageMedia);
         }
      }
 }
