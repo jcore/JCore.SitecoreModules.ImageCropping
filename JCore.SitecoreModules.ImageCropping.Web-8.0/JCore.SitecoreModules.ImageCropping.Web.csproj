@@ -93,6 +93,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\AACN.pubxml" />
     <None Include="Properties\PublishProfiles\sc72.pubxml" />
     <None Include="Properties\PublishProfiles\sc75 Release.pubxml" />
     <None Include="Properties\PublishProfiles\sc75.pubxml" />
