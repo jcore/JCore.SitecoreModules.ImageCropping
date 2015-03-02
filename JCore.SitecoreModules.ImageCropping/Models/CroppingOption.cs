@@ -21,6 +21,6 @@ namespace JCore.SitecoreModules.ImageCropping.Models
     }
     public enum VerticalAlignment
     {
-        Top, Medium, Bottom, Undefined
+        Top, Middle, Bottom, Undefined
     }
 }

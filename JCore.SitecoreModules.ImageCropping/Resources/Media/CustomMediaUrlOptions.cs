@@ -24,6 +24,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
     /// </summary>
     public class CustomMediaUrlOptions : MediaUrlOptions
     {
+        private static CustomMediaUrlOptions _empty;
         /// <summary>
         /// Gets or sets the crop region.
         /// </summary>
@@ -36,7 +37,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// Initializes a new instance of the <see cref="T:Sitecore.Resources.Media.MediaUrlOptions"/> class.
         /// 
         /// </summary>
-        public CustomMediaUrlOptions() : base()
+        public CustomMediaUrlOptions()
         {
         }
 
@@ -50,6 +51,12 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         ///             </param>
         public CustomMediaUrlOptions(int width, int height, bool thumbnail) : base(width,height, thumbnail)
         {
+        }
+
+        public CustomMediaUrlOptions(int width, int height, string cropregion, bool thumbnail)
+            : base(width, height, thumbnail)
+        {
+            CropRegion = cropregion;
         }
 
         /// <summary>
@@ -78,10 +85,10 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        public new static CustomMediaUrlOptions GetMediaOptions(MediaItem item)
+        public static CustomMediaUrlOptions GetMediaUrlOptions(MediaItem item)
         {
-            Assert.ArgumentNotNull((object)item, "item");
-            CustomMediaUrlOptions shellOptions = CustomMediaUrlOptions.GetShellOptions();
+            Assert.ArgumentNotNull(item, "item");
+            CustomMediaUrlOptions shellOptions = GetShellOptions();
             shellOptions.Database = item.Database;
             shellOptions.DisableBrowserCache = true;
             shellOptions.UseDefaultIcon = true;
@@ -91,13 +98,26 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             return shellOptions;
         }
 
+        public new static CustomMediaUrlOptions GetThumbnailOptions(MediaItem item)
+        {
+            Assert.ArgumentNotNull((object)item, "item");
+            CustomMediaUrlOptions shellOptions = GetShellOptions();
+            shellOptions.Database = item.Database;
+            shellOptions.Thumbnail = true;
+            shellOptions.DisableBrowserCache = true;
+            shellOptions.UseDefaultIcon = true;
+            shellOptions.BackgroundColor = Color.White;
+            shellOptions.ItemRevision = item.InnerItem[FieldIDs.Revision];
+            shellOptions.Language = item.InnerItem.Language;
+            return shellOptions;
+        }
         /// <summary>
         /// Gets the shell options.
         /// </summary>
         /// <returns></returns>
         public new static CustomMediaUrlOptions GetShellOptions()
         {
-            return new CustomMediaUrlOptions()
+            return new CustomMediaUrlOptions
             {
                 AbsolutePath = false,
                 RequestExtension = "ashx",
@@ -113,43 +133,13 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         ///             </param>
         public new void ParseQueryString(HttpRequest httpRequest)
         {
-            Assert.ArgumentNotNull((object)httpRequest, "httpRequest");
-            string str1 = httpRequest.QueryString["as"];
-            if (!string.IsNullOrEmpty(str1))
-                this.AllowStretch = MainUtil.GetBool(str1, false);
-            string color = httpRequest.QueryString["bc"];
-            if (!string.IsNullOrEmpty(color))
-                this.BackgroundColor = MainUtil.StringToColor(color);
-            try
-            {
-                this.Database = this.GetDatabase(httpRequest);
-            }
-            catch
-            {
-                HttpContext.Current.Response.Redirect(Settings.ItemNotFoundUrl);
-            }
-            string str2 = httpRequest.QueryString["dmc"];
-            if (!string.IsNullOrEmpty(str2))
-                this.DisableMediaCache = MainUtil.GetBool(str2, false);
-            this.Height = MainUtil.GetInt(httpRequest.QueryString["h"], 0);
-            string str3 = httpRequest.QueryString["iar"];
-            if (!string.IsNullOrEmpty(str3))
-                this.IgnoreAspectRatio = MainUtil.GetBool(str3, false);
-            this.Language = this.GetLanguage(httpRequest);
-            this.MaxHeight = MainUtil.GetInt(httpRequest.QueryString["mh"], 0);
-            this.MaxWidth = MainUtil.GetInt(httpRequest.QueryString["mw"], 0);
-            this.Scale = MainUtil.GetFloat(httpRequest.QueryString["sc"], 0.0f);
-            string str4 = httpRequest.QueryString["thn"];
-            if (!string.IsNullOrEmpty(str4))
-                this.Thumbnail = MainUtil.GetBool(str4, false);
-            this.Version = this.GetVersion(httpRequest);
-            this.Width = MainUtil.GetInt(httpRequest.QueryString["w"], 0);
+            base.ParseQueryString(httpRequest);
 
             // custom crop region
             var cropRegion = httpRequest.QueryString["cropregion"];
             if (!string.IsNullOrEmpty(cropRegion))
             {
-                this.CropRegion = cropRegion;
+                CropRegion = cropRegion;
             }
         }
 
@@ -165,10 +155,22 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
-            UrlString urlString = new UrlString(base.ToString());
-            if (!string.IsNullOrEmpty(this.CropRegion))
-                urlString.Add("cropregion", this.CropRegion);
-            return urlString.ToString();
+            var urlString = new UrlString(base.ToString());
+            return !string.IsNullOrEmpty(CropRegion) ? string.Format("{0}{1}cropregion={2}", urlString, (urlString.Parameters != null && urlString.Parameters.Count > 0 ? "&" : "?"), CropRegion) : urlString.ToString();
         }
+
+        public new static CustomMediaUrlOptions Empty
+        {
+            get
+            {
+                return _empty ?? new CustomMediaUrlOptions();
+            }
+            set
+            {
+                Assert.ArgumentNotNull(value, "value");
+                _empty = value;
+            }
+        }
+
     }
 }

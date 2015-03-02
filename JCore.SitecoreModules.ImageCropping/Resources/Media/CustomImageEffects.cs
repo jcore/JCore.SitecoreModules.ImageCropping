@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JCore.SitecoreModules.ImageCropping.Pipelines.GetMediaStream;
 using Sitecore.Configuration;
 using Sitecore.Diagnostics;
-using Sitecore.ImageLib;
-using Sitecore.IO;
 using Sitecore.Resources.Media;
 
 namespace JCore.SitecoreModules.ImageCropping.Resources.Media
@@ -29,10 +24,10 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// <returns/>
         public virtual Stream TransformImageStream(Stream inputStream, CustomTransformationOptions options, ImageFormat outputFormat)
         {
-            Assert.ArgumentNotNull((object)inputStream, "inputStream");
-            Assert.ArgumentNotNull((object)options, "options");
-            Assert.ArgumentNotNull((object)outputFormat, "outputFormat");
-            return this.CropImageStream(inputStream, options, outputFormat);
+            Assert.ArgumentNotNull(inputStream, "inputStream");
+            Assert.ArgumentNotNull(options, "options");
+            Assert.ArgumentNotNull(outputFormat, "outputFormat");
+            return CropImageStream(inputStream, options, outputFormat);
         }
 
         /// <summary>
@@ -45,35 +40,25 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// </returns>
         public Stream CropImageStream(Stream inputStream, CustomTransformationOptions options, ImageFormat outputFormat)
         {
-            Assert.ArgumentNotNull((object)inputStream, "inputStream");
-            Assert.ArgumentNotNull((object)options, "options");
-            Assert.ArgumentNotNull((object)outputFormat, "outputFormat");
-            Bitmap newImage;
+            Assert.ArgumentNotNull(inputStream, "inputStream");
+            Assert.ArgumentNotNull(options, "options");
+            Assert.ArgumentNotNull(outputFormat, "outputFormat");
 
             if (inputStream.Length <= Settings.Media.MaxSizeInMemory)
             {
-                if (options.CropRegion != null && options.CropRegion.Count()  == 4)
-                {
-                    MemoryStream stream = new MemoryStream();
-                    newImage = new Cropper().Crop(new Bitmap(inputStream), options, outputFormat);
-                    newImage.Save(stream, outputFormat);
+                if (options.CropRegion == null || options.CropRegion.Count() != 4) return null;
+                var stream = new MemoryStream();
+                var newImage = new Cropper().Crop(new Bitmap(inputStream), options, outputFormat);
+                newImage.Save(stream, outputFormat);
 
-                    stream.Seek(0L, SeekOrigin.Begin);
+                stream.Seek(0L, SeekOrigin.Begin);
 
-                    newImage.Dispose();
+                newImage.Dispose();
 
-                    return stream;
-                }
-                else
-                {
-                    return null;
-                }
+                return stream;
             }
-            else
-            {
-                Tracer.Error("Could not crop image stream as it was larger than the maximum size allowed for memory processing.");
-                return null;
-            }
+            Tracer.Error("Could not crop image stream as it was larger than the maximum size allowed for memory processing.");
+            return null;
         }
 
         private ImageCodecInfo FindEncoderInfo(ImageFormat outputFormat)
@@ -91,9 +76,9 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        private CustomTransformationOptions GetCropOptions(CustomTransformationOptions options)
+        protected virtual CustomTransformationOptions GetCropOptions(CustomTransformationOptions options)
         {
-            return new CustomTransformationOptions()
+            return new CustomTransformationOptions
             {
                 AllowStretch = options.AllowStretch,
                 BackgroundColor = options.BackgroundColor,

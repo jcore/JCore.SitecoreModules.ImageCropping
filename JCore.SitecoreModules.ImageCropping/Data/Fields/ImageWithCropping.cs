@@ -286,7 +286,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
 
             int y1 = 0;
             int y2 = originalHeight;
-            if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Medium &&
+            if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Middle &&
                 originalHeight > croppingOption.Height)
             {
                 y1 = (originalHeight - croppingOption.Height) / 2;
@@ -344,10 +344,10 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         private void GetSrc(out string src)
         {
             src = string.Empty;
-            MediaItem mediaItem = (MediaItem)this.GetMediaItem();
+            MediaItem mediaItem = GetMediaItem();
             if (mediaItem == null)
                 return;
-            CustomMediaUrlOptions thumbnailOptions = CustomMediaUrlOptions.GetMediaOptions(mediaItem);
+            var thumbnailOptions = CustomMediaUrlOptions.GetMediaUrlOptions(mediaItem);
             int result;
             if (!int.TryParse(mediaItem.InnerItem["Height"], out result))
                 result = 128;
@@ -355,7 +355,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             thumbnailOptions.MaxWidth = 640;
             thumbnailOptions.UseDefaultIcon = true;
 
-            XmlValue xmlValue = this.XmlValue;
+            XmlValue xmlValue = XmlValue;
             string cropRegion = WebUtil.HtmlEncode(xmlValue.GetAttribute("cropregion"));
             if (!string.IsNullOrEmpty(cropRegion))
             {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -10,17 +7,15 @@ using Sitecore.IO;
 using Sitecore.Resources;
 using Sitecore.Resources.Media;
 using Sitecore.Web;
-using Sitecore;
 
 namespace JCore.SitecoreModules.ImageCropping.Resources.Media
 {
     public class CustomMediaProvider : MediaProvider
     {
-        public CustomMediaProvider() : base() { }
         /// <summary>
         /// The effects
         /// </summary>
-        private CustomImageEffects effects = new CustomImageEffects();
+        private CustomImageEffects _effects = new CustomImageEffects();
 
         /// <summary>
         /// Gets or sets the object handling image effects and transformations.
@@ -34,12 +29,12 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         {
             get
             {
-                return this.effects;
+                return _effects;
             }
             set
             {
-                Assert.ArgumentNotNull((object)value, "value");
-                this.effects = value;
+                Assert.ArgumentNotNull(value, "value");
+                _effects = value;
             }
         }
         /// <summary>
@@ -52,29 +47,37 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         /// </returns>
         public override string GetMediaUrl(MediaItem item, MediaUrlOptions options)
         {
-            Assert.ArgumentNotNull((object)item, "item");
-            Assert.ArgumentNotNull((object)options, "options");
-            bool flag = options.Thumbnail || this.HasMediaContent((Sitecore.Data.Items.Item)item);
+            Assert.ArgumentNotNull(item, "item");
+            Assert.ArgumentNotNull(options, "options");
+            var flag = options.Thumbnail || HasMediaContent(item);
             if (!flag && item.InnerItem["path"].Length > 0)
-                return item.InnerItem["path"];
+            {
+                if (!options.LowercaseUrls)
+                    return item.InnerItem["path"];
+                return item.InnerItem["path"].ToLowerInvariant();
+            }
             if (options.UseDefaultIcon && !flag)
-                return Themes.MapTheme(Settings.DefaultIcon);
-            Assert.IsTrue(this.Config.MediaPrefixes[0].Length > 0, "media prefixes are not configured properly.");
-            string str1 = this.MediaLinkPrefix;
+            {
+                return !options.LowercaseUrls ? Themes.MapTheme(Settings.DefaultIcon) : Themes.MapTheme(Settings.DefaultIcon).ToLowerInvariant();
+            }
+            Assert.IsTrue(Config.MediaPrefixes[0].Length > 0, "media prefixes are not configured properly.");
+            var str1 = MediaLinkPrefix;
             if (options.AbsolutePath)
                 str1 = options.VirtualFolder + str1;
             else if (str1.StartsWith("/", StringComparison.InvariantCulture))
                 str1 = StringUtil.Mid(str1, 1);
+            var part2 = MainUtil.EncodePath(str1, '/');
             if (options.AlwaysIncludeServerUrl)
-                str1 = FileUtil.MakePath(WebUtil.GetServerUrl(), str1, '/');
-            string str2 = StringUtil.EnsurePrefix('.', StringUtil.GetString(options.RequestExtension, item.Extension, "ashx"));
-            string str3 = options.ToString();
+                part2 = FileUtil.MakePath(string.IsNullOrEmpty(options.MediaLinkServerUrl) ? WebUtil.GetServerUrl() : options.MediaLinkServerUrl, part2, '/');
+            var str2 = StringUtil.EnsurePrefix('.', StringUtil.GetString(options.RequestExtension, item.Extension, "ashx"));
+            var str3 = options.ToString();
             if (str3.Length > 0)
                 str2 = str2 + "?" + str3;
-            string str4 = "/sitecore/media library/";
-            string path = item.InnerItem.Paths.Path;
-            string str5 = !options.UseItemPath || !path.StartsWith(str4, StringComparison.OrdinalIgnoreCase) ? item.ID.ToShortID().ToString() : StringUtil.Mid(path, str4.Length);
-            return str1 + str5 + (options.IncludeExtension ? str2 : string.Empty);
+            const string str4 = "/sitecore/media library/";
+            var path = item.InnerItem.Paths.Path;
+            var str5 = MainUtil.EncodePath(!options.UseItemPath || !path.StartsWith(str4, StringComparison.OrdinalIgnoreCase) ? item.ID.ToShortID().ToString() : StringUtil.Mid(path, str4.Length), '/');
+            var str6 = part2 + str5 + (options.IncludeExtension ? str2 : string.Empty);
+            return !options.LowercaseUrls ? str6 : str6.ToLowerInvariant();
         }
     }
 }
