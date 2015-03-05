@@ -42,8 +42,8 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// <param name="output">The output.</param>
         protected override void DoRender(HtmlTextWriter output)
         {
-            Assert.ArgumentNotNull((object)output, "output");
-            Item mediaItem = this.GetMediaItem();
+            Assert.ArgumentNotNull(output, "output");
+            Item mediaItem = GetMediaItem();
             string src;
             this.GetSrc(out src);
             string str1 = " src=\"" + src + "\"";
@@ -56,7 +56,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             output.Write("<iframe" + str2 + str1 + str3 + " frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" width=\"100%\" height=\"128\" allowtransparency=\"allowtransparency\"></iframe>");
             output.Write("</div>");
             output.Write("<div id=\"" + this.ID + "_details\" class=\"scContentControlImageDetails\">");
-            string details = this.GetDetails();
+            var details = GetDetails();
             output.Write(details);
             output.Write("</div>");
             output.Write("</div>");
@@ -69,25 +69,25 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// <param name="args">The args.</param>
         protected new void ShowProperties(ClientPipelineArgs args)
         {
-            Assert.ArgumentNotNull((object)args, "args");
-            if (this.Disabled)
+            Assert.ArgumentNotNull(args, "args");
+            if (Disabled)
                 return;
-            string attribute = this.XmlValue.GetAttribute("mediaid");
+            var attribute = XmlValue.GetAttribute("mediaid");
             if (string.IsNullOrEmpty(attribute))
                 SheerResponse.Alert("Select an image from the Media Library first.", new string[0]);
             else if (args.IsPostBack)
             {
                 if (!args.HasResult)
                     return;
-                this.XmlValue = new XmlValue(args.Result, "image");
-                this.Value = this.XmlValue.GetAttribute("mediapath");
-                this.SetModified();
-                this.Update();
+                XmlValue = new XmlValue(args.Result, "image");
+                Value = XmlValue.GetAttribute("mediapath");
+                SetModified();
+                Update();
             }
             else
             {
-                UrlString urlString = new UrlString("/sitecore/shell/~/xaml/Sitecore.Shell.Applications.Media.ExtendedImageProperties.aspx");
-                Item obj = Client.ContentDatabase.GetItem(attribute, Language.Parse(this.ItemLanguage));
+                var urlString = new UrlString("/sitecore/shell/~/xaml/Sitecore.Shell.Applications.Media.ExtendedImageProperties.aspx");
+                var obj = Client.ContentDatabase.GetItem(attribute, Language.Parse(ItemLanguage));
                 if (obj == null)
                 {
                     SheerResponse.Alert("Select an image from the Media Library first.", new string[0]);
@@ -95,8 +95,8 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 else
                 {
                     obj.Uri.AddToUrlString(urlString);
-                    UrlHandle urlHandle = new UrlHandle();
-                    urlHandle["xmlvalue"] = this.XmlValue.ToString();
+                    var urlHandle = new UrlHandle();
+                    urlHandle["xmlvalue"] = XmlValue.ToString();
                     urlHandle.Add(urlString);
                     SheerResponse.ShowModalDialog(urlString.ToString(), "700", "700", string.Empty, true);
                     args.WaitForPostBack();
@@ -111,37 +111,37 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// <param name="message">The message.</param>
         protected override void DoChange(Message message)
         {
-            Assert.ArgumentNotNull((object)message, "message");
+            Assert.ArgumentNotNull(message, "message");
             base.DoChange(message);
-            if (string.IsNullOrEmpty(this.Value))
+            if (string.IsNullOrEmpty(Value))
             {
-                this.ClearImage();
+                ClearImage();
             }
             else
             {
-                this.XmlValue.SetAttribute("mediapath", this.Value);
-                string path = this.Value;
+                XmlValue.SetAttribute("mediapath", Value);
+                var path = Value;
                 if (!path.StartsWith("/sitecore", StringComparison.InvariantCulture))
                     path = "/sitecore/media library" + path;
-                MediaItem mediaItem = (MediaItem)Client.ContentDatabase.GetItem(path);
+                var mediaItem = (MediaItem)Client.ContentDatabase.GetItem(path);
                 if (mediaItem != null)
                 {
-                    string str = mediaItem.InnerItem.Paths.Path;
+                    var str = mediaItem.InnerItem.Paths.Path;
                     if (str.StartsWith("/sitecore/media library", StringComparison.InvariantCulture))
                         str = str.Substring("/sitecore/media library".Length);
-                    MediaUrlOptions shellOptions = MediaUrlOptions.GetShellOptions();
-                    string mediaUrl = MediaManager.GetMediaUrl(mediaItem, shellOptions);
-                    this.XmlValue.SetAttribute("mediaid", mediaItem.ID.ToString());
-                    this.XmlValue.SetAttribute("mediapath", str);
-                    this.XmlValue.SetAttribute("src", Images.GetUncachedImageSrc(mediaUrl));
+                    var shellOptions = MediaUrlOptions.GetShellOptions();
+                    var mediaUrl = MediaManager.GetMediaUrl(mediaItem, shellOptions);
+                    XmlValue.SetAttribute("mediaid", mediaItem.ID.ToString());
+                    XmlValue.SetAttribute("mediapath", str);
+                    XmlValue.SetAttribute("src", Images.GetUncachedImageSrc(mediaUrl));
                 }
                 else
                 {
-                    this.XmlValue.SetAttribute("mediaid", string.Empty);
-                    this.XmlValue.SetAttribute("src", string.Empty);
+                    XmlValue.SetAttribute("mediaid", string.Empty);
+                    XmlValue.SetAttribute("src", string.Empty);
                 }
-                this.Update();
-                this.SetModified();
+                Update();
+                SetModified();
             }
             SheerResponse.SetReturnValue(true);
         }
@@ -153,15 +153,15 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         protected new void Update()
         {
             string src;
-            this.GetSrc(out src);
-            SheerResponse.SetAttribute(this.ID + "_image", "src", src);
-            SheerResponse.SetInnerHtml(this.ID + "_details", this.GetDetails());
+            GetSrc(out src);
+            SheerResponse.SetAttribute(ID + "_image", "src", src);
+            SheerResponse.SetInnerHtml(ID + "_details", GetDetails());
             SheerResponse.Eval("scContent.startValidators()");
         }
 
         protected new void Browse()
         {
-            if (this.Disabled)
+            if (Disabled)
                 return;
             Sitecore.Context.ClientPage.Start(this, "BrowseImage");
         }
@@ -182,25 +182,26 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 MediaItem mediaItem = Client.ContentDatabase.Items[args.Result];
                 if (mediaItem != null)
                 {
-                    TemplateItem template = mediaItem.InnerItem.Template;
+                    var template = mediaItem.InnerItem.Template;
                     if (template != null && !IsImageMedia(template))
                     {
                         SheerResponse.Alert("The selected item does not contain an image.");
                     }
                     else
                     {
-                        this.XmlValue.SetAttribute("mediaid", mediaItem.ID.ToString());
+                        XmlValue.SetAttribute("mediaid", mediaItem.ID.ToString());
                         var croppingOption = GetCroppingOption();
                         var cropRegion = ProduceCropRegionXmlAttributeValueFromAnOption(mediaItem, croppingOption);
                         if (!string.IsNullOrWhiteSpace(cropRegion))
                         {
-                            this.XmlValue.SetAttribute("cropregion", cropRegion);
+                            XmlValue.SetAttribute("cropregion", cropRegion);
+                            XmlValue.SetAttribute("ratio", string.Concat(croppingOption.Width, ":", croppingOption.Height));
                         }
-                        this.XmlValue.SetAttribute("width", croppingOption.Width.ToString());
-                        this.XmlValue.SetAttribute("height", croppingOption.Height.ToString());
-                        this.Value = mediaItem.MediaPath;
-                        this.Update();
-                        this.SetModified();
+                        XmlValue.SetAttribute("width", croppingOption.Width.ToString());
+                        XmlValue.SetAttribute("height", croppingOption.Height.ToString());
+                        Value = mediaItem.MediaPath;
+                        Update();
+                        SetModified();
                     }
                 }
                 else
@@ -214,14 +215,14 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 {
                     mediaSource = souceValues["mediaSource"];
                 }
-                string str1 = StringUtil.GetString(new string[2]
+                var str1 = StringUtil.GetString(new string[2]
                 {
                   mediaSource,
                   "/sitecore/media library"
                 });
-                string str2 = str1;
-                string path = this.XmlValue.GetAttribute("mediaid");
-                string str3 = path;
+                var str2 = str1;
+                var path = XmlValue.GetAttribute("mediaid");
+                var str3 = path;
                 if (str1.StartsWith("~", StringComparison.InvariantCulture))
                 {
                     str2 = StringUtil.Mid(str1, 1);
@@ -229,32 +230,32 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                         path = str2;
                     str1 = "/sitecore/media library";
                 }
-                Language language = Language.Parse(this.ItemLanguage);
-                MediaBrowserOptions mediaBrowserOptions = new MediaBrowserOptions();
-                Item obj1 = Client.ContentDatabase.GetItem(str1, language);
+                var language = Language.Parse(ItemLanguage);
+                var mediaBrowserOptions = new MediaBrowserOptions();
+                var obj1 = Client.ContentDatabase.GetItem(str1, language);
                 if (obj1 == null)
                     throw new ClientAlertException("The source of this Image field points to an item that does not exist.");
                 mediaBrowserOptions.Root = obj1;
                 if (!string.IsNullOrEmpty(path))
                 {
-                    Item obj2 = Client.ContentDatabase.GetItem(path, language);
+                    var obj2 = Client.ContentDatabase.GetItem(path, language);
                     if (obj2 != null)
                         mediaBrowserOptions.SelectedItem = obj2;
                 }
-                UrlHandle urlHandle = new UrlHandle();
+                var urlHandle = new UrlHandle();
                 urlHandle["ro"] = str1;
                 urlHandle["fo"] = str2;
                 urlHandle["db"] = Client.ContentDatabase.Name;
-                urlHandle["la"] = this.ItemLanguage;
+                urlHandle["la"] = ItemLanguage;
                 urlHandle["va"] = str3;
-                UrlString urlString = mediaBrowserOptions.ToUrlString();
+                var urlString = mediaBrowserOptions.ToUrlString();
                 urlHandle.Add(urlString);
                 SheerResponse.ShowModalDialog(urlString.ToString(), "1200px", "700px", string.Empty, true);
                 args.WaitForPostBack();
             }
         }
 
-        private string ProduceCropRegionXmlAttributeValueFromAnOption(MediaItem mediaItem, CroppingOption croppingOption)
+        private static string ProduceCropRegionXmlAttributeValueFromAnOption(MediaItem mediaItem, CroppingOption croppingOption)
         {
             Assert.ArgumentNotNull(mediaItem, "mediaItem");
             Assert.ArgumentNotNull(croppingOption, "croppingOption");
@@ -268,35 +269,57 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             var originalWidth = Int32.Parse(mediaItem.InnerItem["Width"]);
             var originalHeight = Int32.Parse(mediaItem.InnerItem["Height"]);
 
-            int x1 = 0;
+            var targetWidth = originalWidth;
+            var targetHeight = originalHeight;
+            var xRatio = 1d;
+            var yRatio = 1d;
+            if (originalWidth > croppingOption.Width && originalHeight > croppingOption.Height)
+            {
+                var newWidth = originalWidth*croppingOption.Height/originalHeight;
+                if (newWidth < croppingOption.Width)
+                {
+                    targetHeight = originalHeight * croppingOption.Width / originalWidth;
+                    targetWidth = originalWidth * croppingOption.Height / targetHeight;
+                }
+                else
+                {
+                    targetWidth = newWidth;
+                    targetHeight = originalHeight * croppingOption.Width / targetWidth;
+                }
+                xRatio = (double)originalWidth / targetWidth;
+                yRatio = (double)originalHeight / targetHeight;
+            }
+             
+
+            var x1 = 0;
             int x2 = originalWidth;
 
             // x1 and x2 coordinates
             if (croppingOption.CroppingRegionHorizontalAlignment == HorizonatalAlignment.Center &&
-                originalWidth > croppingOption.Width)
+                originalWidth > croppingOption.Width * xRatio)
             {
-                x1 = (originalWidth - croppingOption.Width)/2;
+                x1 = (int) ((originalWidth - croppingOption.Width * xRatio) / 2);
             }
             else if (croppingOption.CroppingRegionHorizontalAlignment == HorizonatalAlignment.Right &&
-                     originalWidth > croppingOption.Width)
+                     originalWidth > croppingOption.Width * xRatio)
             {
-                x1 = (originalWidth - croppingOption.Width);
+                x1 = (int) (originalWidth - croppingOption.Width * xRatio);
             }
-            x2 = croppingOption.Width + x1;
+            x2 = (int) (croppingOption.Width * xRatio + x1);
 
-            int y1 = 0;
-            int y2 = originalHeight;
+            var y1 = 0;
+            var y2 = originalHeight;
             if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Middle &&
-                originalHeight > croppingOption.Height)
+                originalHeight > croppingOption.Height * yRatio)
             {
-                y1 = (originalHeight - croppingOption.Height) / 2;
+                y1 = (int) ((originalHeight - croppingOption.Height * yRatio) / 2);
             }
             else if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Bottom &&
-                originalHeight > croppingOption.Height)
+                originalHeight > croppingOption.Height * yRatio)
             {
-                y1 = originalHeight - croppingOption.Height;
+                y1 = (int) (originalHeight - croppingOption.Height * yRatio);
             }
-            y2 = croppingOption.Height + y1;
+            y2 = (int) (croppingOption.Height * yRatio + y1);
 
             if (x1 == 0 && x2 == originalWidth && y1 == 0 && y2 == originalHeight)
             {

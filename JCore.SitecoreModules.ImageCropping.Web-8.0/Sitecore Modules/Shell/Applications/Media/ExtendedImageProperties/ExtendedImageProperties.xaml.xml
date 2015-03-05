@@ -39,7 +39,7 @@
             <legend>
               <Literal Text="Cropping Region Options" runat="server"/>
             </legend>
-            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2" Width="100%" runat="server">
+            <GridPanel Class="scFormTable" Columns="2" Cellpadding="2" Width="100%" runat="server" ID="CroppingOptions">
               <input type="radio" name="cropregionstyle" id="free" checked="true">Free </input>
               <input type="radio" name="cropregionstyle" id="square">Square </input>
             </GridPanel>
@@ -101,6 +101,7 @@
               </Border>
               <asp:HiddenField runat="server" ID="OriginalWidth"></asp:HiddenField>
               <asp:HiddenField runat="server" ID="OriginalHeight"></asp:HiddenField>
+            <asp:HiddenField runat="server" ID="Ratio"></asp:HiddenField>
             </GridPanel>
           </fieldset>            
 

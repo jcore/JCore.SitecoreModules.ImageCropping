@@ -13,22 +13,49 @@ $jQuery(function () {
     var x2 = adjustToCoordinate($jQuery("input[coordinate='x2']").val());
     var y2 = adjustToCoordinate($jQuery("input[coordinate='y2']").val());
 
+    var ratio = GetRatio();
+    if (ratio) {
+        $jQuery("#clear").hide();
+    }
+
     if (x1 >= 0 && y1 >= 0 && x2 > 0 && y2 > 0) {
-        media.imgAreaSelect({
-            x1: x1,
-            y1: y1,
-            x2: x2,
-            y2: y2,
-            onSelectEnd: updateCoordinates,
-            handles: true,
-            parent: ".cropImageParent"
-        });
+        if (ratio) {
+            media.imgAreaSelect({
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2,
+                aspectRatio: ratio,
+                onSelectEnd: updateCoordinates,
+                handles: true,
+                parent: ".cropImageParent"
+            });
+        } else {
+            media.imgAreaSelect({
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2,
+                onSelectEnd: updateCoordinates,
+                handles: true,
+                parent: ".cropImageParent"
+            });
+        }
     } else {
-        media.imgAreaSelect({
-            onSelectEnd: updateCoordinates,
-            handles: true,
-            parent: ".cropImageParent"
-        });
+        if (ratio) {
+            media.imgAreaSelect({
+                onSelectEnd: updateCoordinates,
+                handles: true,
+                aspectRatio: ratio,
+                parent: ".cropImageParent"
+            });
+        } else {
+            media.imgAreaSelect({
+                onSelectEnd: updateCoordinates,
+                handles: true,
+                parent: ".cropImageParent"
+            });
+        }
     }
 
     $jQuery("#square").click(function () {
@@ -50,19 +77,21 @@ $jQuery(function () {
         });
     });
     $jQuery("#clear").click(function () {
-        var media = $jQuery(imageId);
-        var ias = media.imgAreaSelect({
-            remove: true,
-            onSelectEnd: updateCoordinates,
-            handles: true,
-            parent: ".cropImageParent"
-        });
-        ias = media.imgAreaSelect({
-            onSelectEnd: updateCoordinates,
-            handles: true,
-            parent: ".cropImageParent"
-        });
-        updateCoordinates(null, { x1: "", y1: "", x2: "", y2: "" });
+        if (!ratio) {
+            var media = $jQuery(imageId);
+            var ias = media.imgAreaSelect({
+                remove: true,
+                onSelectEnd: updateCoordinates,
+                handles: true,
+                parent: ".cropImageParent"
+            });
+            ias = media.imgAreaSelect({
+                onSelectEnd: updateCoordinates,
+                handles: true,
+                parent: ".cropImageParent"
+            });
+            updateCoordinates(null, { x1: "", y1: "", x2: "", y2: "" });
+        }
     });
 });
 
@@ -88,4 +117,7 @@ function CalculateScalingFactor() {
     var originalHeight = $jQuery("input[id$=OriginalHeight]").val();
     var newHeight = 300;
     return originalHeight / 300;
+}
+function GetRatio() {
+    return  $jQuery("input[id$=Ratio]").val();
 }
