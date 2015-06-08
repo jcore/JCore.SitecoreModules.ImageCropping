@@ -1,11 +1,12 @@
 ﻿var $jQuery = jQuery.noConflict();
-var scalingFactor = 1;
 var imageId = "img[id$=Img]";
+var ratio = "";
+var scalingFactor = 1;
 
 $jQuery(function () {
     var media = $jQuery(imageId);
 
-    scalingFactor = CalculateScalingFactor();
+    CalculateScalingFactor();
 
     var x1 = adjustToCoordinate($jQuery("input[coordinate='x1']").val());
     var y1 = adjustToCoordinate($jQuery("input[coordinate='y1']").val());
@@ -13,12 +14,11 @@ $jQuery(function () {
     var x2 = adjustToCoordinate($jQuery("input[coordinate='x2']").val());
     var y2 = adjustToCoordinate($jQuery("input[coordinate='y2']").val());
 
-    var ratio = GetRatio();
     if (ratio) {
         $jQuery("#clear").hide();
     }
 
-    if (x1 >= 0 && y1 >= 0 && x2 > 0 && y2 > 0) {
+    if (x1 >= 0 || y1 >= 0 || x2 > 0 || y2 > 0) {
         if (ratio) {
             media.imgAreaSelect({
                 x1: x1,
@@ -104,20 +104,34 @@ function updateCoordinates(img, selection) {
 }
 
 function adjustToSize(value) {
-    if (!value && value != 0) return "";
+    if (!value && value !== 0) return "";
     return Math.round(value * scalingFactor);
 }
 
 function adjustToCoordinate(value) {
-    if (!value && value != 0) return "";
+    if (!value && value !== 0) return "";
     return Math.round(value / scalingFactor);
 }
 
 function CalculateScalingFactor() {
-    var originalHeight = $jQuery("input[id$=OriginalHeight]").val();
-    var newHeight = 300;
-    return originalHeight / 300;
+    var originalWidth = parseInt($jQuery("input[id$=OriginalWidth]").val());
+    var originalHeight = parseInt($jQuery("input[id$=OriginalHeight]").val());
+    var newWidth;
+    var newHeight;
+    var image = $jQuery(imageId);
+
+    if (originalWidth > originalHeight) {
+        newWidth = 500;
+        newHeight = originalHeight * newWidth / originalWidth;
+    } else {
+        newHeight = 300;
+        newWidth = originalWidth * newHeight / originalHeight;
+    }
+
+    image.width(newWidth);
+    image.height(newHeight);
+    ratio = parseInt(newWidth) + ":" + parseInt(newHeight);
+    scalingFactor = originalWidth / newWidth;
 }
-function GetRatio() {
-    return  $jQuery("input[id$=Ratio]").val();
-}
+
+
