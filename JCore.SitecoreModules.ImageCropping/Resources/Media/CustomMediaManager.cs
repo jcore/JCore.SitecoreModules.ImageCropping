@@ -262,8 +262,9 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
                     Log.Error(ex.Message, ex, typeof(CustomMediaManager));
                 }
             }
-
-            return GetMediaUrl(mediaItem, options);
+            if (!Settings.Media.RequestProtection.Enabled || imageField.InnerField.Name.StartsWith("__"))
+                return GetMediaUrl(mediaItem, options); 
+            return HashingUtils.ProtectAssetUrl(GetMediaUrl(mediaItem, options));
         }
 
         /// <summary>

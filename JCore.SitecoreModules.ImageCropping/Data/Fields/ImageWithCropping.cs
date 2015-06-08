@@ -28,14 +28,6 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
     public class ImageWithCropping : Image
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Sitecore.Shell.Applications.ContentEditor.Image"/> class.
-        /// 
-        /// </summary>
-        public ImageWithCropping() : base()
-        {
-        }
-
-        /// <summary>
         /// Renders the control.
         /// 
         /// </summary>
@@ -45,17 +37,17 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             Assert.ArgumentNotNull(output, "output");
             Item mediaItem = GetMediaItem();
             string src;
-            this.GetSrc(out src);
-            string str1 = " src=\"" + src + "\"";
-            string str2 = " id=\"" + this.ID + "_image\"";
-            string str3 = " alt=\"" + (mediaItem != null ? WebUtil.HtmlEncode(mediaItem["Alt"]) : string.Empty) + "\"";
+            GetSrc(out src);
+            var str1 = " src=\"" + src + "\"";
+            var str2 = " id=\"" + ID + "_image\"";
+            var str3 = " alt=\"" + (mediaItem != null ? WebUtil.HtmlEncode(mediaItem["Alt"]) : string.Empty) + "\"";
             //base.DoRender(output);
-            output.Write("<div id=\"" + this.ID + "_pane\" class=\"scContentControlImagePane\">");
-            string clientEvent = Sitecore.Context.ClientPage.GetClientEvent(this.ID + ".Browse");
+            output.Write("<div id=\"" + ID + "_pane\" class=\"scContentControlImagePane\">");
+            string clientEvent = Sitecore.Context.ClientPage.GetClientEvent(ID + ".Browse");
             output.Write("<div class=\"scContentControlImageImage\" onclick=\"" + clientEvent + "\">");
             output.Write("<iframe" + str2 + str1 + str3 + " frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" width=\"100%\" height=\"128\" allowtransparency=\"allowtransparency\"></iframe>");
             output.Write("</div>");
-            output.Write("<div id=\"" + this.ID + "_details\" class=\"scContentControlImageDetails\">");
+            output.Write("<div id=\"" + ID + "_details\" class=\"scContentControlImageDetails\">");
             var details = GetDetails();
             output.Write(details);
             output.Write("</div>");
@@ -74,7 +66,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 return;
             var attribute = XmlValue.GetAttribute("mediaid");
             if (string.IsNullOrEmpty(attribute))
-                SheerResponse.Alert("Select an image from the Media Library first.", new string[0]);
+                SheerResponse.Alert("Select an image from the Media Library first.");
             else if (args.IsPostBack)
             {
                 if (!args.HasResult)
@@ -90,7 +82,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 var obj = Client.ContentDatabase.GetItem(attribute, Language.Parse(ItemLanguage));
                 if (obj == null)
                 {
-                    SheerResponse.Alert("Select an image from the Media Library first.", new string[0]);
+                    SheerResponse.Alert("Select an image from the Media Library first.");
                 }
                 else
                 {
@@ -269,22 +261,22 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             var originalWidth = Int32.Parse(mediaItem.InnerItem["Width"]);
             var originalHeight = Int32.Parse(mediaItem.InnerItem["Height"]);
 
-            var targetWidth = originalWidth;
-            var targetHeight = originalHeight;
             var xRatio = 1d;
             var yRatio = 1d;
             if (originalWidth > croppingOption.Width && originalHeight > croppingOption.Height)
             {
                 var newWidth = originalWidth*croppingOption.Height/originalHeight;
+                int targetWidth;
+                int targetHeight;
                 if (newWidth < croppingOption.Width)
                 {
                     targetHeight = originalHeight * croppingOption.Width / originalWidth;
-                    targetWidth = originalWidth * croppingOption.Height / targetHeight;
+                    targetWidth = croppingOption.Width;
                 }
                 else
                 {
                     targetWidth = newWidth;
-                    targetHeight = originalHeight * croppingOption.Width / targetWidth;
+                    targetHeight = croppingOption.Height;
                 }
                 xRatio = (double)originalWidth / targetWidth;
                 yRatio = (double)originalHeight / targetHeight;
@@ -292,7 +284,6 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
              
 
             var x1 = 0;
-            int x2 = originalWidth;
 
             // x1 and x2 coordinates
             if (croppingOption.CroppingRegionHorizontalAlignment == HorizonatalAlignment.Center &&
@@ -305,10 +296,9 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             {
                 x1 = (int) (originalWidth - croppingOption.Width * xRatio);
             }
-            x2 = (int) (croppingOption.Width * xRatio + x1);
+            var x2 = (int) (croppingOption.Width * xRatio + x1);
 
             var y1 = 0;
-            var y2 = originalHeight;
             if (croppingOption.CroppingRegionVerticalAlignment == VerticalAlignment.Middle &&
                 originalHeight > croppingOption.Height * yRatio)
             {
@@ -319,12 +309,12 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             {
                 y1 = (int) (originalHeight - croppingOption.Height * yRatio);
             }
-            y2 = (int) (croppingOption.Height * yRatio + y1);
+            var y2 = (int) (croppingOption.Height * yRatio + y1);
 
-            if (x1 == 0 && x2 == originalWidth && y1 == 0 && y2 == originalHeight)
-            {
-                return string.Empty;
-            }
+            //if (x1 == 0 && x2 == originalWidth && y1 == 0 && y2 == originalHeight)
+            //{
+            //    return string.Empty;
+            //}
             return string.Join(",", new[] { x1, y1, x2, y2 });
         }
 
@@ -351,13 +341,13 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// </summary>
         private void ClearImage()
         {
-            if (this.Disabled)
+            if (Disabled)
                 return;
-            if (this.Value.Length > 0)
-                this.SetModified();
-            this.XmlValue = new XmlValue(string.Empty, "image");
-            this.Value = string.Empty;
-            this.Update();
+            if (Value.Length > 0)
+                SetModified();
+            XmlValue = new XmlValue(string.Empty, "image");
+            Value = string.Empty;
+            Update();
         }
         /// <summary>
         /// Gets the image source.
@@ -378,8 +368,8 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             thumbnailOptions.MaxWidth = 640;
             thumbnailOptions.UseDefaultIcon = true;
 
-            XmlValue xmlValue = XmlValue;
-            string cropRegion = WebUtil.HtmlEncode(xmlValue.GetAttribute("cropregion"));
+            var xmlValue = XmlValue;
+            var cropRegion = WebUtil.HtmlEncode(xmlValue.GetAttribute("cropregion"));
             if (!string.IsNullOrEmpty(cropRegion))
             {
                 thumbnailOptions.CropRegion = cropRegion;
@@ -405,12 +395,12 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
             {
                 croppingOptionString = String.Format("<div>Default Cropping: {0} - {1}x{2}</div>", croppingOption.Name, croppingOption.Width, croppingOption.Height);
             }
-            MediaItem mediaItem = (MediaItem)this.GetMediaItem();
+            MediaItem mediaItem = GetMediaItem();
             if (mediaItem != null)
             {
-                Item innerItem = mediaItem.InnerItem;
-                StringBuilder stringBuilder = new StringBuilder();
-                XmlValue xmlValue = this.XmlValue;
+                var innerItem = mediaItem.InnerItem;
+                var stringBuilder = new StringBuilder();
+                var xmlValue = XmlValue;
                 stringBuilder.Append("<div>");
                 string str2 = innerItem["Dimensions"];
                 string str3 = WebUtil.HtmlEncode(xmlValue.GetAttribute("width"));
@@ -437,10 +427,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                     }
                     else
                     {
-                        stringBuilder.Append(Translate.Text("Dimensions: {0}", new object[1]
-                      {
-                        (object) str2
-                      }));
+                        stringBuilder.Append(Translate.Text("Dimensions: {0}", (object) str2));
                     }
                 }
                 stringBuilder.Append("</div>");
@@ -450,15 +437,9 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 if (!string.IsNullOrEmpty(str6) && !string.IsNullOrEmpty(str5))
                     stringBuilder.Append(Translate.Text("Alternate Text: \"{0}\" (Default Alternate Text: \"{1}\")", (object)str6, (object)str5));
                 else if (!string.IsNullOrEmpty(str6))
-                    stringBuilder.Append(Translate.Text("Alternate Text: \"{0}\"", new object[1]
-          {
-            (object) str6
-          }));
+                    stringBuilder.Append(Translate.Text("Alternate Text: \"{0}\"", (object) str6));
                 else if (!string.IsNullOrEmpty(str5))
-                    stringBuilder.Append(Translate.Text("Default Alternate Text: \"{0}\"", new object[1]
-          {
-            (object) str5
-          }));
+                    stringBuilder.Append(Translate.Text("Default Alternate Text: \"{0}\"", (object) str5));
                 else
                     stringBuilder.Append(Translate.Text("Warning: Alternate Text is missing."));
                 stringBuilder.Append("</div>");
@@ -467,62 +448,52 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
                 {
                     stringBuilder.Append(croppingOptionString);
                 }
-                str1 = ((object)stringBuilder).ToString();
+                str1 = stringBuilder.ToString();
             }
 
-            if (str1.Length == 0)
+            if (str1.Length != 0) return str1;
+            str1 = Translate.Text("This media item has no details.");
+            if (!string.IsNullOrWhiteSpace(croppingOptionString))
             {
-                str1 = Translate.Text("This media item has no details.");
-                if (!string.IsNullOrWhiteSpace(croppingOptionString))
-                {
-                    str1 += croppingOptionString;
-                }
+                str1 += croppingOptionString;
             }
             return str1;
         }
 
         private CroppingOption GetCroppingOption()
         {
-            if (!string.IsNullOrWhiteSpace(Source))
+            if (string.IsNullOrWhiteSpace(Source)) return null;
+            var values = HttpUtility.ParseQueryString(Source);
+            if (!values.HasKeys()) return null;
+            var croppingOptionSource = values["CroppingOption"];
+            if (string.IsNullOrWhiteSpace(croppingOptionSource)) return null;
+            var language = Language.Parse(ItemLanguage);
+            var croppingOptionItem = Client.ContentDatabase.GetItem(croppingOptionSource, language);
+            if (croppingOptionItem != null)
             {
-                var values = HttpUtility.ParseQueryString(Source);
-                if (values.HasKeys())
+                return new CroppingOption
                 {
-                    var croppingOptionSource = values["CroppingOption"];
-                    if (!string.IsNullOrWhiteSpace(croppingOptionSource))
-                    {
-                        Language language = Language.Parse(ItemLanguage);
-                        Item croppingOptionItem = Client.ContentDatabase.GetItem(croppingOptionSource, language);
-                        if (croppingOptionItem != null)
-                        {
-                            return new CroppingOption
-                            {
-                                Name = croppingOptionItem.DisplayName,
-                                Width = Int32.Parse(croppingOptionItem.Fields["Width"].Value),
-                                Height = Int32.Parse(croppingOptionItem.Fields["Height"].Value),
-                                CroppingRegionHorizontalAlignment = GetCroppingRegionHorizontalAlignment(croppingOptionItem),
-                                CroppingRegionVerticalAlignment = GetCroppingRegionVerticalAlignment(croppingOptionItem)
-                            };
-                        }
-                    }
-                }
+                    Name = croppingOptionItem.DisplayName,
+                    Width = Int32.Parse(croppingOptionItem.Fields["Width"].Value),
+                    Height = Int32.Parse(croppingOptionItem.Fields["Height"].Value),
+                    CroppingRegionHorizontalAlignment = GetCroppingRegionHorizontalAlignment(croppingOptionItem),
+                    CroppingRegionVerticalAlignment = GetCroppingRegionVerticalAlignment(croppingOptionItem)
+                };
             }
             return null;
         }
 
         private static VerticalAlignment GetCroppingRegionVerticalAlignment(Item croppingOptionItem)
         {
-            if (croppingOptionItem != null &&
-                !string.IsNullOrWhiteSpace(croppingOptionItem["Cropping Region Vertical Alignment"]))
+            if (croppingOptionItem == null ||
+                string.IsNullOrWhiteSpace(croppingOptionItem["Cropping Region Vertical Alignment"]))
+                return VerticalAlignment.Undefined;
             {
-                {
-                    return
-                        (VerticalAlignment)
-                            Enum.Parse(typeof (VerticalAlignment),
-                                croppingOptionItem.Fields["Cropping Region Vertical Alignment"].Value);
-                }
+                return
+                    (VerticalAlignment)
+                        Enum.Parse(typeof (VerticalAlignment),
+                            croppingOptionItem.Fields["Cropping Region Vertical Alignment"].Value);
             }
-            return VerticalAlignment.Undefined;
         }
 
         /// <summary>
@@ -530,7 +501,7 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// </summary>
         /// <param name="croppingOptionItem">The cropping option item.</param>
         /// <returns></returns>
-        private static HorizonatalAlignment GetCroppingRegionHorizontalAlignment(Item croppingOptionItem)
+        private static HorizonatalAlignment GetCroppingRegionHorizontalAlignment(BaseItem croppingOptionItem)
         {
             if (croppingOptionItem != null &&
                 !string.IsNullOrWhiteSpace(croppingOptionItem["Cropping Region Horizontal Alignment"]))
@@ -546,11 +517,11 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// <summary>
         /// Converts to int.
         /// </summary>
-        /// <param name="p">The p.</param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        private int ConvertToInt(string value)
+        private static int ConvertToInt(string value)
         {
-            var intValue = 0;
+            int intValue;
             if (!int.TryParse(value, out intValue))
             {
                 intValue = 0;
@@ -566,14 +537,14 @@ namespace JCore.SitecoreModules.ImageCropping.Data.Fields
         /// </returns>
         private Item GetMediaItem()
         {
-            string attribute = XmlValue.GetAttribute("mediaid");
+            var attribute = XmlValue.GetAttribute("mediaid");
             if (attribute.Length <= 0)
                 return null;
-            Language language = Language.Parse(ItemLanguage);
+            var language = Language.Parse(ItemLanguage);
             return Client.ContentDatabase.GetItem(attribute, language);
         }
 
-        private bool IsImageMedia(TemplateItem template)
+        private static bool IsImageMedia(TemplateItem template)
         {
             Assert.ArgumentNotNull(template, "template");
             if (template.ID == TemplateIDs.VersionedImage || template.ID == TemplateIDs.UnversionedImage)
