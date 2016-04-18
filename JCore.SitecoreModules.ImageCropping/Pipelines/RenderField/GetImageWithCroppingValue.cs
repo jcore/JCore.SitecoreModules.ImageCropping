@@ -24,11 +24,11 @@ namespace JCore.SitecoreModules.ImageCropping.Pipelines.RenderField
         /// 
         /// </summary>
         /// <param name="args">The arguments.</param><contract><requires name="args" condition="none"/></contract>
-        public void Process(RenderFieldArgs args)
+        public new void Process(RenderFieldArgs args)
         {
             if (args.FieldTypeKey != "image with cropping")
                 return;
-            ImageRenderer renderer = this.CreateRenderer();
+            ImageRenderer renderer = CreateRenderer();
             renderer.Item = args.Item;
             renderer.FieldName = args.FieldName;
 
@@ -60,7 +60,7 @@ namespace JCore.SitecoreModules.ImageCropping.Pipelines.RenderField
             
             renderer.Parameters = args.Parameters;
 
-            args.WebEditParameters.AddRange((SafeDictionary<string, string>)args.Parameters);
+            args.WebEditParameters.AddRange(args.Parameters);
             RenderFieldResult renderFieldResult = renderer.Render();
             args.Result.FirstPart = renderFieldResult.FirstPart;
             args.Result.LastPart = renderFieldResult.LastPart;
@@ -77,7 +77,7 @@ namespace JCore.SitecoreModules.ImageCropping.Pipelines.RenderField
         /// <returns>
         /// The renderer.
         /// </returns>
-        protected virtual ImageRenderer CreateRenderer()
+        protected override ImageRenderer CreateRenderer()
         {
             return new ImageWithCropRenderer();
         }

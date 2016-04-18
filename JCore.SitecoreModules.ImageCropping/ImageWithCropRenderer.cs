@@ -1,23 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using Sitecore;
+﻿using Sitecore;
 using Sitecore.Collections;
-using Sitecore.Configuration;
 using Sitecore.Data.Fields;
-using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
-using Sitecore.Globalization;
-using Sitecore.Install.Files;
-using Sitecore.Resources.Media;
-using Sitecore.Sites;
-using Sitecore.Text;
 using Sitecore.Xml.Xsl;
+using JCore.SitecoreModules.ImageCropping.Data.Fields;
 
 namespace JCore.SitecoreModules.ImageCropping
 {
@@ -25,10 +11,10 @@ namespace JCore.SitecoreModules.ImageCropping
     /// Implements the Image Renderer.
     /// 
     /// </summary>
-    public class ImageWithCropRenderer : Sitecore.Xml.Xsl.ImageRenderer
+    public class ImageWithCropRenderer : ImageRenderer
     {
-        private string cropRegion;
-        private bool cropSet;
+        private string _cropRegion;
+        private bool _cropSet;
         /// <summary>
         /// Gets the value of source attribute taking all parameters into account.
         /// 
@@ -41,13 +27,12 @@ namespace JCore.SitecoreModules.ImageCropping
         protected override string GetSource()
         {
             var imgSrc = base.GetSource();
-            if (this.cropSet)
+            if (_cropSet)
             {
-                imgSrc = string.Format("{0}{1}cropregion={2}",imgSrc,(imgSrc.Contains("?") ? "&" : "?"), this.cropRegion);
+                imgSrc = string.Format("{0}{1}cropregion={2}",imgSrc,(imgSrc.Contains("?") ? "&" : "?"), _cropRegion);
             }
             return imgSrc;
         }
-
 
         /// <summary>
         /// Parses the field.
@@ -57,12 +42,13 @@ namespace JCore.SitecoreModules.ImageCropping
         ///             </param>
         protected override void ParseField(ImageField imageFieldParse)
         {
-            Assert.ArgumentNotNull((object)imageFieldParse, "imageFieldParse");
+            Assert.ArgumentNotNull(imageFieldParse, "imageFieldParse");
             base.ParseField(imageFieldParse);
-            if (string.IsNullOrEmpty(this.cropRegion))
+            if (string.IsNullOrEmpty(_cropRegion))
             {
-                this.cropRegion = StringUtil.GetString(imageFieldParse.GetAttribute("cropregion"), string.Empty);
-                this.cropSet = true;
+                if (imageFieldParse != null)
+                    _cropRegion = StringUtil.GetString(imageFieldParse.GetAttribute("cropregion"), string.Empty);
+                _cropSet = true;
             }
         }
         /// <summary>
@@ -79,9 +65,9 @@ namespace JCore.SitecoreModules.ImageCropping
         /// </returns>
         private string Extract(SafeDictionary<string> values, ref bool valueSet, params string[] keys)
         {
-            Assert.ArgumentNotNull((object)values, "values");
-            Assert.ArgumentNotNull((object)keys, "keys");
-            string str = this.Extract(values, keys);
+            Assert.ArgumentNotNull(values, "values");
+            Assert.ArgumentNotNull(keys, "keys");
+            var str = Extract(values, keys);
             valueSet = str != null;
             return str;
         }

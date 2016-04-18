@@ -18,6 +18,7 @@ using Sitecore.Text;
 using Sitecore.Web;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Sheer;
+using Sitecore.Web.UI.WebControls;
 using Sitecore.Web.UI.XamlSharp.Xaml;
 
 
@@ -69,6 +70,8 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
 
         protected HiddenField OriginalWidth;
         protected HiddenField OriginalHeight;
+        protected HiddenField Ratio;
+        protected GridPanel CroppingOptions;
 
         /// <summary>
         /// The image
@@ -180,6 +183,10 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
             int num = MainUtil.GetInt(this.HeightEdit.Text, 0);
             if (num > 0)
             {
+                if (!string.IsNullOrWhiteSpace(Ratio.Value))
+                {
+                    return;
+                }
                 if (num > 8192)
                 {
                     num = 8192;
@@ -211,9 +218,13 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
         {
             if (this.ImageWidth == 0)
                 return;
-            int num = MainUtil.GetInt(this.WidthEdit.Text, 0);
+            var num = MainUtil.GetInt(this.WidthEdit.Text, 0);
             if (num > 0)
             {
+                if (!string.IsNullOrWhiteSpace(Ratio.Value))
+                {
+                    return;
+                }
                 if (num > 8192)
                 {
                     num = 8192;
@@ -354,6 +365,14 @@ namespace JCore.SitecoreModules.ImageCropping.Shell.Applications.Media
             this.X2.Text = this.GetCoordinateValue(xmlValue, "x2");
             this.Y1.Text = this.GetCoordinateValue(xmlValue, "y1");
             this.Y2.Text = this.GetCoordinateValue(xmlValue, "y2");
+
+            this.Ratio.Value = xmlValue.GetAttribute("ratio");
+            if (!string.IsNullOrWhiteSpace(this.Ratio.Value))
+            {
+                HeightEdit.Enabled = false;
+                WidthEdit.Enabled = false;
+                CroppingOptions.Visible = false;
+            }
 
             if (MainUtil.GetBool(urlHandle["disableheight"], false))
             {

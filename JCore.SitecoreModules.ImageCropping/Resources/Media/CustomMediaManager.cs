@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using Sitecore.Configuration;
 using Sitecore.Data.Fields;
+using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Resources.Media;
 using Sitecore.Shell.Applications.ContentEditor;
@@ -16,28 +14,52 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
 {
     public static class CustomMediaManager
     {
-        /// <summary>
-        /// The _provider
-        /// </summary>
-        private static CustomMediaProvider _provider;
-
-        /// <summary>
-        /// Gets or sets the provider.
-        /// </summary>
-        /// <value>
-        /// The provider.
-        /// </value>
-        public static CustomMediaProvider Provider
+        public static MediaCache Cache
         {
             get
             {
-                return CustomMediaManager._provider;
+                return MediaManager.Provider.Cache;
             }
             set
             {
-                CustomMediaManager._provider = value;
+                Assert.ArgumentNotNull(value, "value");
+                MediaManager.Provider.Cache = value;
             }
         }
+
+        public static MediaConfig Config
+        {
+            get
+            {
+                return Provider.Config;
+            }
+            set
+            {
+                Provider.Config = value;
+            }
+        }
+        /// <summary>
+        /// Gets or sets the object used when creating new media items.
+        /// 
+        /// </summary>
+        /// 
+        /// <value>
+        /// The creator.
+        /// </value>
+        public static MediaCreator Creator
+        {
+            get
+            {
+                return Provider.Creator;
+            }
+            set
+            {
+                Provider.Creator = value;
+            }
+        }
+
+
+        public static CustomMediaProvider Provider { get; set; }
 
         /// <summary>
         /// Gets or sets the object handling image effects and transformations.
@@ -51,38 +73,133 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         {
             get
             {
-                return CustomMediaManager.Provider.Effects;
+                return Provider.Effects;
             }
             set
             {
-                CustomMediaManager.Provider.Effects = value;
+                Provider.Effects = value;
             }
         }
 
         /// <summary>
-        /// Initializes the <see cref="CustomMediaManager"/> class.
+        /// Gets the media link prefix.
+        ///             The prefix to use when Sitecore generates media links.
+        ///             The setting is used in the front-end as well as the back-end.
+        /// 
         /// </summary>
+        /// 
+        /// <value>
+        /// The media link prefix.
+        /// </value>
+        public static string MediaLinkPrefix
+        {
+            get
+            {
+                return Provider.MediaLinkPrefix;
+            }
+        }
+        /// <summary>
+        /// Gets or sets the MIME resolver.
+        /// 
+        /// </summary>
+        /// 
+        /// <value>
+        /// The MIME resolver.
+        /// </value>
+        public static MimeResolver MimeResolver
+        {
+            get
+            {
+                return Provider.MimeResolver;
+            }
+            set
+            {
+                Provider.MimeResolver = value;
+            }
+        }
+
         static CustomMediaManager()
         {
-            CustomMediaManager._provider = new CustomMediaProvider();
+            var configNode = Factory.GetConfigNode("mediaLibrary/mediaProvider");
+            if (configNode == null)
+                Provider = new CustomMediaProvider();
+            else
+                Provider = Factory.CreateObject(configNode, true) as CustomMediaProvider;
         }
-
         /// <summary>
-        /// Gets the media URL.
+        /// Gets media from a media item.
+        /// 
         /// </summary>
-        /// <param name="mediaItem">The media item.</param>
-        /// <param name="options">The thumbnail options.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        internal static string GetMediaUrl(global::Sitecore.Data.Items.MediaItem mediaItem, CustomMediaUrlOptions options)
+        /// <param name="item">The item.</param>
+        /// <returns/>
+        public static Sitecore.Resources.Media.Media GetMedia(MediaItem item)
         {
-            return CustomMediaManager.Provider.GetMediaUrl(mediaItem, options);
+            return Provider.GetMedia(item);
+        }
+        /// <summary>
+        /// Gets media from a media URI.
+        /// 
+        /// </summary>
+        /// <param name="mediaUri">The media URI.</param>
+        /// <returns/>
+        public static Sitecore.Resources.Media.Media GetMedia(MediaUri mediaUri)
+        {
+            return Provider.GetMedia(mediaUri);
+        }
+        /// <summary>
+        /// Determines whether the specified item has a media stream with content.
+        /// 
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>
+        /// <c>true</c> if  the specified item has a media stream with content; otherwise, <c>false</c>.
+        /// 
+        /// </returns>
+        public static bool HasMediaContent(Item item)
+        {
+            return Provider.HasMediaContent(item);
+        }
+        /// <summary>
+        /// Gets a media URL.
+        /// 
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>
+        /// The media URL.
+        /// </returns>
+        public static string GetMediaUrl(MediaItem item)
+        {
+            return Provider.GetMediaUrl(item);
+        }
+
+        /// <summary>
+        /// Gets a media URL.
+        /// </summary>
+        public static string GetMediaUrl(MediaItem item, CustomMediaUrlOptions options)
+        {
+            return Provider.GetMediaUrl(item, options);
+        }
+
+        public static string GetThumbnailUrl(MediaItem item)
+        {
+            return Provider.GetThumbnailUrl(item);
+        }
+        public static bool IsMediaRequest(HttpRequest httpRequest)
+        {
+            return Provider.IsMediaRequest(httpRequest);
+        }
+        public static bool IsMediaUrl(string url)
+        {
+            return Provider.IsMediaUrl(url);
+        }
+        public static MediaRequest ParseMediaRequest(HttpRequest request)
+        {
+            return Provider.ParseMediaRequest(request);
         }
 
         /// <summary>
         /// Gets the media URL.
         /// </summary>
-        /// <param name="mediaItem">The media item.</param>
         /// <returns></returns>
         public static string GetMediaUrl(ImageField imageField)
         {
@@ -92,16 +209,16 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             if (mediaItem == null)
                 return string.Empty;
 
-            CustomMediaUrlOptions originalUrlOptions = CustomMediaUrlOptions.GetMediaOptions(mediaItem);
-            var options = CustomMediaUrlOptions.GetShellOptions();
+            //var options = CustomMediaUrlOptions.GetMediaUrlOptions(mediaItem);
+            var options = CustomMediaUrlOptions.Empty;
 
-            var height = 0;
+            int height;
             if (int.TryParse(imageField.Height, out height))
             {
                 options.Height = height;
             }
 
-            var width = 0;
+            int width;
             if (int.TryParse(imageField.Width, out width))
             {
                 options.Width = width;
@@ -110,7 +227,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             options.Language = mediaItem.Language;
             options.UseDefaultIcon = true;
 
-            return CustomMediaManager.GetMediaUrl(imageField, options);
+            return GetMediaUrl(imageField, options);
         }
 
         /// <summary>
@@ -126,8 +243,8 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             var mediaItem = imageField.MediaItem;
             if (mediaItem == null)
                 return string.Empty;
-            
-            string cropRegion = WebUtil.HtmlEncode(new XmlValue(imageField.Value, "image").GetAttribute("cropregion"));
+
+            string cropRegion = HttpUtility.HtmlEncode(new XmlValue(imageField.Value, "image").GetAttribute("cropregion"));
             if (!string.IsNullOrEmpty(cropRegion))
             {
                 try
@@ -145,8 +262,9 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
                     Log.Error(ex.Message, ex, typeof(CustomMediaManager));
                 }
             }
-
-            return CustomMediaManager.GetMediaUrl(mediaItem, options);
+            if (!Settings.Media.RequestProtection.Enabled || imageField.InnerField.Name.StartsWith("__"))
+                return GetMediaUrl(mediaItem, options); 
+            return HashingUtils.ProtectAssetUrl(GetMediaUrl(mediaItem, options));
         }
 
         /// <summary>
@@ -158,7 +276,7 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
         {
             try
             {
-                return cropRegion.Split(',').Select(c => int.Parse(c)).ToArray();
+                return cropRegion.Split(',').Select(int.Parse).ToArray();
             }
             catch (Exception ex)
             {
@@ -166,6 +284,8 @@ namespace JCore.SitecoreModules.ImageCropping.Resources.Media
             }
             return new int[4];
         }
-    
+
     }
+
+
 }
